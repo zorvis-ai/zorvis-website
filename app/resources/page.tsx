@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
+"use client";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
-import { ALL_POSTS } from "./blog/posts";
-
-export const metadata: Metadata = {
-  title: "Resources — HR Guides, Blog & Templates for India & UAE",
-  description: "Free hiring guides, blog articles, and templates for Indian and UAE HR managers. CV screening, aptitude testing, UAE compliance, BPO hiring, and more.",
-};
+import { ALL_POSTS, CATEGORIES } from "./blog/posts";
 
 const RECENT = ALL_POSTS.slice(0, 6);
 const FEATURED = ALL_POSTS.filter(p => p.featured).slice(0, 4);
@@ -30,14 +25,14 @@ const RESOURCE_HUBS = [
 ];
 
 const TOPIC_CLUSTERS = [
-  { label: "CV Screening & Shortlisting", href: "/resources/blog?category=CV+Screening", icon: "📋" },
-  { label: "Aptitude Testing & Assessments", href: "/resources/blog?category=Assessments", icon: "✅" },
-  { label: "UAE Compliance & WPS", href: "/resources/blog?category=UAE+Compliance", icon: "🇦🇪" },
-  { label: "BPO Hiring India", href: "/resources/blog?category=BPO+Hiring", icon: "🎯" },
-  { label: "AI in Recruitment", href: "/resources/blog?category=AI+Hiring", icon: "🤖" },
-  { label: "SME HR Operations", href: "/resources/blog?category=SME+HR", icon: "⚙️" },
-  { label: "Attrition & Retention", href: "/resources/blog?category=Attrition+%26+Retention", icon: "📈" },
-  { label: "HR Software Comparisons", href: "/resources/blog?category=HR+Software+India", icon: "🔍" },
+  { label: "CV Screening & Shortlisting",    href: "/resources/blog", icon: "📋" },
+  { label: "Aptitude Testing & Assessments", href: "/resources/blog", icon: "✅" },
+  { label: "UAE Compliance & WPS",           href: "/resources/blog", icon: "🇦🇪" },
+  { label: "BPO Hiring India",               href: "/resources/blog", icon: "🎯" },
+  { label: "AI in Recruitment",              href: "/resources/blog", icon: "🤖" },
+  { label: "SME HR Operations",              href: "/resources/blog", icon: "⚙️" },
+  { label: "Attrition & Retention",          href: "/resources/blog", icon: "📈" },
+  { label: "HR Software Comparisons",        href: "/resources/blog", icon: "🔍" },
 ];
 
 export default function ResourcesPage() {
@@ -61,10 +56,7 @@ export default function ResourcesPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
           {RESOURCE_HUBS.map(r => (
             <Link key={r.title} href={r.href} style={{ textDecoration: "none" }}>
-              <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 14, padding: "24px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "box-shadow 0.15s, border-color 0.15s", position: "relative", overflow: "hidden" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)"; (e.currentTarget as HTMLDivElement).style.borderColor = `${r.color}40`; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "#E2E6F0"; }}
-              >
+              <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 14, padding: "24px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "box-shadow 0.15s, border-color 0.15s", position: "relative", overflow: "hidden", cursor: "pointer" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: r.color }} />
                 <span style={{ fontSize: 28, display: "block", marginBottom: 10 }}>{r.icon}</span>
                 <div style={{ fontSize: 18, fontWeight: 700, color: "#0D1117", marginBottom: 4 }}>{r.title}</div>
@@ -84,10 +76,7 @@ export default function ResourcesPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10 }}>
             {TOPIC_CLUSTERS.map(t => (
               <Link key={t.label} href={t.href} style={{ textDecoration: "none" }}>
-                <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 10, transition: "border-color 0.15s, box-shadow 0.15s" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#C7D2FE"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 8px rgba(79,70,229,0.08)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#E2E6F0"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}
-                >
+                <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
                   <span style={{ fontSize: 18 }}>{t.icon}</span>
                   <span style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>{t.label}</span>
                 </div>
@@ -106,10 +95,7 @@ export default function ResourcesPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 14 }}>
           {FEATURED.map(p => (
             <Link key={p.slug} href={`/resources/blog/${p.slug}`} style={{ textDecoration: "none" }}>
-              <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 12, padding: "18px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)", transition: "box-shadow 0.15s, border-color 0.15s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 14px rgba(0,0,0,0.07)"; (e.currentTarget as HTMLDivElement).style.borderColor = "#C7D2FE"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.03)"; (e.currentTarget as HTMLDivElement).style.borderColor = "#E2E6F0"; }}
-              >
+              <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 12, padding: "18px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)", cursor: "pointer" }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: "#4F46E5", marginBottom: 8 }}>{p.category.toUpperCase()}</div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#0D1117", lineHeight: 1.4, marginBottom: 6 }}>{p.title}</div>
                 <div style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.5, marginBottom: 10 }}>{p.description.slice(0, 90)}...</div>
