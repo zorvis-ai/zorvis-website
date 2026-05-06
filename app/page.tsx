@@ -1,651 +1,230 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
-import { ZorvisLogo } from "@/components/ZorvisLogo";
+import Link from "next/link";
+import { Nav, ZMark, Footer, Tag } from "@/components/Nav";
+import { MODULES, CHANNELS, USE_CASES, BRAND } from "@/components/brand";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface Candidate {
-  name: string;
-  role: string;
-  score: string;
-  stage: "applied" | "ranked" | "tested" | "offered" | "hired";
-  highlight?: boolean;
-}
-
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const CANDIDATES: Candidate[] = [
-  { name: "Kavya Reddy",  role: "BPO Analyst",  score: "84–90", stage: "ranked",  highlight: true },
-  { name: "Arjun Mehta",  role: "BPO Analyst",  score: "78–84", stage: "tested" },
-  { name: "Priya Singh",  role: "Team Lead",    score: "72–78", stage: "offered" },
-  { name: "Ravi Kumar",   role: "BPO Analyst",  score: "66–72", stage: "applied" },
-  { name: "Divya Nair",   role: "Senior Agent", score: "82–88", stage: "hired",   highlight: true },
-];
-
-const PAIN_POINTS = [
-  { icon: "📋", label: "400 CVs every Monday",      detail: "6 hours reading. Zero score.", color: "#EF4444" },
-  { icon: "💸", label: "Separate testing tool",      detail: "₹2,000 per candidate. Another login.", color: "#F59E0B" },
-  { icon: "📧", label: "Offers on email",             detail: "No signature. No timestamp. No record.", color: "#818CF8" },
-  { icon: "📊", label: "5 job boards, 5 inboxes",    detail: "Zero unified pipeline.", color: "#EF4444" },
-  { icon: "🔄", label: "Hire fails at 90 days",      detail: "No data trail. No way to learn.", color: "#F59E0B" },
-  { icon: "🏢", label: "Enterprise tools: ₹40L/yr",  detail: "5-month setup. Not for SMEs.", color: "#818CF8" },
-];
-
-const MODULES = [
-  {
-    num: "01",
-    name: "Hire",
-    tagline: "AI-powered pipeline",
-    desc: "Job post → AI ranking → WhatsApp test → digital offer → e-signature. End to end.",
-    status: "Live — India",
-    statusColor: "#10B981",
-    accentColor: "#4F46E5",
-    features: ["400 CVs ranked in 3 min", "WhatsApp-native testing", "ZIE score engine", "Digital offers + e-sign"],
-  },
-  {
-    num: "02",
-    name: "Manage",
-    tagline: "Daily HR OS",
-    desc: "Leave. Payslips. Goals. Documents. All answered on WhatsApp. Employees self-serve.",
-    status: "Phase 2",
-    statusColor: "#818CF8",
-    accentColor: "#818CF8",
-    features: ["WhatsApp HR helpdesk", "Leave & payslip self-service", "UAE WPS + Emirates ID", "Bilingual Arabic offers"],
-  },
-  {
-    num: "03",
-    name: "Grow",
-    tagline: "People intelligence",
-    desc: "Hire-to-retire data. Every outcome feeds a flywheel that makes every future hire smarter.",
-    status: "Phase 3",
-    statusColor: "#F59E0B",
-    accentColor: "#F59E0B",
-    features: ["Monthly workforce reports", "Hire quality data flywheel", "Team health scores", "Source ROI tracking"],
-  },
-];
-
-const STAGE_LABEL: Record<string, string> = {
-  applied: "Applied",
-  ranked: "AI Ranked",
-  tested: "Test Sent",
-  offered: "Offer Sent",
-  hired: "Hired",
-};
-
-const STAGE_COLOR: Record<string, string> = {
-  applied: "#6B7280",
-  ranked: "#818CF8",
-  tested: "#F59E0B",
-  offered: "#3B82F6",
-  hired: "#10B981",
-};
-
-// ─── Sub-components ────────────────────────────────────────────────────────────
-
-function CandidateCard({ c, delay = 0 }: { c: Candidate; delay?: number }) {
-  const [visible, setVisible] = useState(false);
+function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [val, setVal] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), delay);
-    return () => clearTimeout(t);
-  }, [delay]);
-
-  return (
-    <div
-      style={{
-        background: c.highlight ? "rgba(79,70,229,0.12)" : "rgba(255,255,255,0.04)",
-        border: `1px solid ${c.highlight ? "rgba(129,140,248,0.4)" : "rgba(255,255,255,0.08)"}`,
-        borderRadius: 10,
-        padding: "12px 16px",
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(8px)",
-        transition: "opacity 0.4s ease, transform 0.4s ease",
-      }}
-    >
-      <div style={{
-        width: 36, height: 36, borderRadius: "50%",
-        background: `rgba(79,70,229,0.25)`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 13, fontWeight: 600, color: "#C7D2FE", flexShrink: 0,
-      }}>
-        {c.name.split(" ").map(n => n[0]).join("")}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#F9FAFB", lineHeight: 1.3 }}>{c.name}</div>
-        <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 1 }}>{c.role}</div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-        <div style={{
-          fontSize: 12, fontWeight: 700,
-          color: c.highlight ? "#C7D2FE" : "#9CA3AF",
-          fontVariantNumeric: "tabular-nums",
-        }}>
-          {c.score}
-        </div>
-        <div style={{
-          fontSize: 10, fontWeight: 500,
-          color: STAGE_COLOR[c.stage],
-          background: `${STAGE_COLOR[c.stage]}18`,
-          padding: "2px 8px", borderRadius: 20,
-          letterSpacing: "0.02em",
-        }}>
-          {STAGE_LABEL[c.stage]}
-        </div>
-      </div>
-    </div>
-  );
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; obs.disconnect();
+      let n = 0; const step = Math.ceil(target / 40);
+      const t = setInterval(() => { n += step; if (n >= target) { setVal(target); clearInterval(t); } else setVal(n); }, 28);
+    }, { threshold: 0.3 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [target]);
+  return <span ref={ref}>{val}{suffix}</span>;
 }
 
-function PipelineWidget() {
-  return (
-    <div style={{
-      background: "rgba(13,15,26,0.9)",
-      border: "1px solid rgba(79,70,229,0.3)",
-      borderRadius: 16,
-      padding: "20px 24px",
-      backdropFilter: "blur(12px)",
-      maxWidth: 440,
-      width: "100%",
-    }}>
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#F9FAFB" }}>
-          Hiring pipeline — Senior BPO Analyst
-        </div>
-        <div style={{ fontSize: 11, color: "#818CF8", marginTop: 2 }}>
-          {CANDIDATES.length} candidates · 1 offer sent · 1 hired
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {CANDIDATES.map((c, i) => (
-          <CandidateCard key={c.name} c={c} delay={i * 120} />
-        ))}
-      </div>
-      <div style={{
-        marginTop: 16, paddingTop: 14,
-        borderTop: "1px solid rgba(255,255,255,0.07)",
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-      }}>
-        <div style={{ fontSize: 11, color: "#6B7280" }}>400 CVs processed in 3 min</div>
-        <div style={{
-          fontSize: 11, fontWeight: 500, color: "#4F46E5",
-          background: "rgba(79,70,229,0.12)",
-          padding: "4px 12px", borderRadius: 20, cursor: "pointer",
-        }}>
-          Unlock contacts →
-        </div>
-      </div>
-    </div>
-  );
-}
+const CANDIDATES = [
+  { name: "Kavya Reddy",  role: "BPO Analyst",  score: "84–90", stage: "AI Ranked",  ch: "Email",     hi: true },
+  { name: "Arjun Mehta",  role: "BPO Senior",   score: "78–84", stage: "Test Sent",  ch: "WhatsApp",  hi: false },
+  { name: "Priya Singh",  role: "Team Lead",    score: "72–78", stage: "Offer Sent", ch: "SMS",       hi: false },
+  { name: "Divya Nair",   role: "Sr. Agent",    score: "82–88", stage: "Hired ✓",   ch: "Email",     hi: true },
+];
+const SC: Record<string, string> = { "AI Ranked":"#818CF8","Test Sent":"#F59E0B","Offer Sent":"#3B82F6","Hired ✓":"#10B981" };
+const CC: Record<string, string> = { Email:"#6B7280", WhatsApp:"#10B981", SMS:"#F59E0B" };
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+const PAIN = [
+  { icon:"📋", h:"400 CVs every Monday",    b:"6 hours of reading. Zero score. No consistency. No record of why you shortlisted anyone.", c:"#EF4444" },
+  { icon:"💸", h:"Testing costs ₹2,000/candidate", b:"Separate login. Separate invoice. Completely disconnected from your pipeline.", c:"#F59E0B" },
+  { icon:"📧", h:"Offers lost in email threads", b:"7 threads to track one offer. No timestamp. No digital signature. No legal record.", c:"#818CF8" },
+  { icon:"🗂️", h:"5 job boards, 5 inboxes",  b:"The best candidates ghost because nobody followed up. You never even know.", c:"#EF4444" },
+  { icon:"📉", h:"Hire fails at 90 days",    b:"No one connects the failure back to the aptitude score at hiring. That data never existed.", c:"#F59E0B" },
+  { icon:"🏢", h:"Enterprise tools: ₹40L/yr", b:"5-month implementation. Built for 5,000-person companies. You have 50.", c:"#818CF8" },
+];
+
 export default function HomePage() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
   return (
-    <div style={{
-      fontFamily: "'DM Sans', system-ui, sans-serif",
-      background: "#0C0E1A",
-      color: "#F9FAFB",
-      minHeight: "100vh",
-      overflowX: "hidden",
-    }}>
+    <div style={{ fontFamily:"'DM Sans',system-ui,sans-serif", background:"#0C0E1A", color:"#F9FAFB", minHeight:"100vh", overflowX:"hidden" }}>
+      <Nav/>
 
-      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        background: scrolled ? "rgba(12,14,26,0.95)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none",
-        transition: "all 0.3s ease",
-        padding: "0 32px",
-        height: 60,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
-        <ZorvisLogo size={28} theme="dark" showWordmark />
+      {/* ── HERO ── */}
+      <section style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"120px 32px 80px", position:"relative", overflow:"hidden", textAlign:"center" }}>
+        <div style={{ position:"absolute", inset:0, zIndex:0, backgroundImage:"radial-gradient(circle,rgba(79,70,229,0.12) 1px,transparent 1px)", backgroundSize:"40px 40px", maskImage:"radial-gradient(ellipse 80% 60% at 50% 40%,black 30%,transparent 100%)" }}/>
+        <div style={{ position:"absolute", top:"32%", left:"50%", transform:"translate(-50%,-50%)", width:700, height:420, background:"radial-gradient(ellipse,rgba(79,70,229,0.15) 0%,transparent 70%)", pointerEvents:"none" }}/>
 
-        {/* Desktop nav */}
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }} className="desktop-nav">
-          {["Product", "Use Cases", "Solutions", "Pricing", "Customers"].map(item => (
-            <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} style={{
-              fontSize: 14, color: "#9CA3AF", textDecoration: "none",
-              transition: "color 0.2s",
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#F9FAFB")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#9CA3AF")}
-            >{item}</a>
-          ))}
-        </div>
-
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <a href="/login" style={{
-            fontSize: 13, color: "#818CF8", textDecoration: "none",
-            padding: "8px 16px",
-          }}>
-            Sign in
-          </a>
-          <a href="/waitlist" style={{
-            background: "#4F46E5",
-            color: "#FFFFFF",
-            fontSize: 13, fontWeight: 600,
-            padding: "9px 20px",
-            borderRadius: 8,
-            textDecoration: "none",
-            transition: "background 0.2s, transform 0.1s",
-          }}
-            onMouseEnter={e => (e.currentTarget.style.background = "#4338CA")}
-            onMouseLeave={e => (e.currentTarget.style.background = "#4F46E5")}
-            onMouseDown={e => (e.currentTarget.style.transform = "scale(0.98)")}
-            onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            Get early access
-          </a>
-        </div>
-      </nav>
-
-      {/* ── HERO ────────────────────────────────────────────────────────────── */}
-      <section ref={heroRef} style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "120px 32px 80px",
-        position: "relative",
-        overflow: "hidden",
-        textAlign: "center",
-      }}>
-        {/* Dot grid */}
-        <div style={{
-          position: "absolute", inset: 0, zIndex: 0,
-          backgroundImage: `radial-gradient(circle, rgba(79,70,229,0.12) 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-          maskImage: "radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%)",
-        }} />
-
-        {/* Glow */}
-        <div style={{
-          position: "absolute",
-          top: "30%", left: "50%", transform: "translate(-50%, -50%)",
-          width: 600, height: 400,
-          background: "radial-gradient(ellipse, rgba(79,70,229,0.18) 0%, transparent 70%)",
-          zIndex: 0, pointerEvents: "none",
-        }} />
-
-        {/* Pill badge */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          display: "inline-flex", alignItems: "center", gap: 8,
-          background: "rgba(79,70,229,0.12)",
-          border: "1px solid rgba(129,140,248,0.3)",
-          borderRadius: 100,
-          padding: "6px 16px",
-          marginBottom: 32,
-        }}>
-          <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#818CF8" }} />
-          <span style={{ fontSize: 12, color: "#818CF8", fontWeight: 500, letterSpacing: "0.02em" }}>
-            People Intelligence Platform — India &amp; UAE
-          </span>
+        {/* Eyebrow */}
+        <div style={{ position:"relative", zIndex:1, display:"inline-flex", alignItems:"center", gap:8, background:"rgba(79,70,229,0.1)", border:"1px solid rgba(129,140,248,0.25)", borderRadius:100, padding:"6px 16px", marginBottom:28 }}>
+          <div style={{ width:7, height:7, borderRadius:"50%", background:"#10B981", animation:"zpulse 2s ease-in-out infinite" }}/>
+          <span style={{ fontSize:12, color:"#818CF8", fontWeight:500 }}>People Intelligence Platform · India & UAE · Early Access Open</span>
         </div>
 
         {/* H1 */}
-        <h1 style={{
-          position: "relative", zIndex: 1,
-          fontSize: "clamp(42px, 7vw, 80px)",
-          fontWeight: 700,
-          letterSpacing: "-0.03em",
-          lineHeight: 1.05,
-          margin: "0 0 8px",
-          color: "#FFFFFF",
-          maxWidth: 820,
-        }}>
-          Hire. Manage. Grow.
-        </h1>
-        <h1 style={{
-          position: "relative", zIndex: 1,
-          fontSize: "clamp(42px, 7vw, 80px)",
-          fontWeight: 700,
-          letterSpacing: "-0.03em",
-          lineHeight: 1.1,
-          margin: "0 0 28px",
-          color: "#818CF8",
-          maxWidth: 820,
-        }}>
-          All powered by AI.
-        </h1>
+        <h1 style={{ position:"relative", zIndex:1, fontSize:"clamp(44px,7vw,84px)", fontWeight:700, letterSpacing:"-0.04em", lineHeight:1.02, margin:"0 0 8px", color:"#FFFFFF", maxWidth:900 }}>Hire. Manage. Grow.</h1>
+        <h1 style={{ position:"relative", zIndex:1, fontSize:"clamp(44px,7vw,84px)", fontWeight:700, letterSpacing:"-0.04em", lineHeight:1.08, margin:"0 0 22px", color:"#818CF8", maxWidth:900 }}>All powered by AI.</h1>
 
         {/* Sub */}
-        <p style={{
-          position: "relative", zIndex: 1,
-          fontSize: "clamp(15px, 2vw, 18px)",
-          color: "#9CA3AF",
-          maxWidth: 560,
-          lineHeight: 1.6,
-          margin: "0 0 40px",
-        }}>
-          One platform. WhatsApp-native. Built for India &amp; UAE SMEs.
-          <br />
-          <span style={{ color: "#C7D2FE" }}>400 CVs ranked in 3 minutes.</span> Tests on WhatsApp. Offers signed digitally.
+        <p style={{ position:"relative", zIndex:1, fontSize:"clamp(15px,2vw,19px)", color:"#9CA3AF", maxWidth:600, lineHeight:1.65, margin:"0 0 16px" }}>
+          {BRAND.pitch} One platform. Every channel your people already use.
         </p>
 
-        {/* CTAs */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
-          marginBottom: 56,
-        }}>
-          <a href="/waitlist" style={{
-            background: "#4F46E5",
-            color: "#FFFFFF",
-            fontSize: 15, fontWeight: 600,
-            padding: "14px 28px",
-            borderRadius: 10,
-            textDecoration: "none",
-            transition: "background 0.2s, transform 0.1s",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}
-            onMouseEnter={e => (e.currentTarget.style.background = "#4338CA")}
-            onMouseLeave={e => (e.currentTarget.style.background = "#4F46E5")}
-          >
-            Start free — no card required
-          </a>
-          <a href="/demo" style={{
-            background: "transparent",
-            border: "1px solid rgba(129,140,248,0.3)",
-            color: "#818CF8",
-            fontSize: 15, fontWeight: 500,
-            padding: "14px 28px",
-            borderRadius: 10,
-            textDecoration: "none",
-            transition: "border-color 0.2s, background 0.2s",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = "rgba(129,140,248,0.6)";
-              e.currentTarget.style.background = "rgba(79,70,229,0.08)";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = "rgba(129,140,248,0.3)";
-              e.currentTarget.style.background = "transparent";
-            }}
-          >
-            Watch 2-min demo
-          </a>
-        </div>
-
-        {/* Social proof */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          display: "flex", alignItems: "center", gap: 10,
-        }}>
-          <div style={{ display: "flex" }}>
-            {["KR", "AM", "PS", "RK"].map((init, i) => (
-              <div key={init} style={{
-                width: 28, height: 28, borderRadius: "50%",
-                background: `hsl(${240 + i * 15}, 50%, ${30 + i * 5}%)`,
-                border: "2px solid #0C0E1A",
-                marginLeft: i > 0 ? -8 : 0,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 9, fontWeight: 600, color: "#C7D2FE",
-              }}>{init}</div>
-            ))}
-          </div>
-          <span style={{ fontSize: 12, color: "#6B7280" }}>
-            Trusted by 40+ BPO companies in beta
-          </span>
-        </div>
-
-        {/* Pipeline widget */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          marginTop: 64,
-          display: "flex", justifyContent: "center",
-          width: "100%",
-        }}>
-          <PipelineWidget />
-        </div>
-      </section>
-
-      {/* ── PROBLEM ─────────────────────────────────────────────────────────── */}
-      <section style={{
-        background: "#060A12",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        padding: "80px 32px",
-      }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", color: "#EF4444", textAlign: "center", marginBottom: 12 }}>
-            THE PROBLEM
-          </p>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, letterSpacing: "-0.02em", textAlign: "center", color: "#FFFFFF", marginBottom: 8 }}>
-            Sound familiar?
-          </h2>
-          <p style={{ fontSize: 15, color: "#9CA3AF", textAlign: "center", marginBottom: 48 }}>
-            Every Monday morning in every SME across India.
-          </p>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 16,
-          }}>
-            {PAIN_POINTS.map(p => (
-              <div key={p.label} style={{
-                background: `${p.color}08`,
-                border: `1px solid ${p.color}28`,
-                borderRadius: 12,
-                padding: "20px 24px",
-                display: "flex", alignItems: "flex-start", gap: 14,
-                transition: "border-color 0.2s",
-              }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = `${p.color}55`)}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = `${p.color}28`)}
-              >
-                <span style={{ fontSize: 22, flexShrink: 0 }}>{p.icon}</span>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#F9FAFB", marginBottom: 4 }}>{p.label}</div>
-                  <div style={{ fontSize: 12, color: p.color, opacity: 0.8 }}>{p.detail}</div>
-                </div>
+        {/* Channel strip */}
+        <div style={{ position:"relative", zIndex:1 }}>
+          <div style={{ display:"flex", gap:8, flexWrap:"wrap", justifyContent:"center" }}>
+            {CHANNELS.map(c => (
+              <div key={c.label} style={{ display:"flex", alignItems:"center", gap:5, background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:100, padding:"5px 13px", fontSize:11, color:"#9CA3AF" }}>
+                <span>{c.icon}</span>{c.label}
               </div>
             ))}
           </div>
-          <div style={{
-            marginTop: 40, textAlign: "center",
-            fontSize: 16, fontWeight: 600, color: "#FFFFFF",
-          }}>
-            Zorvis solves all of this.{" "}
-            <span style={{ color: "#818CF8" }}>In one platform. Starting free.</span>
+          <p style={{ fontSize:11, color:"#4B5563", marginTop:8 }}>Candidate chooses email, WhatsApp, SMS or web. Employee chooses Slack, email or portal. One unified view for HR.</p>
+        </div>
+
+        {/* CTAs */}
+        <div style={{ position:"relative", zIndex:1, display:"flex", gap:12, flexWrap:"wrap", justifyContent:"center", margin:"32px 0 44px" }}>
+          <Link href="/waitlist" style={{ background:"#4F46E5", color:"#FFFFFF", fontSize:15, fontWeight:600, padding:"14px 30px", borderRadius:10, textDecoration:"none" }}>Start free — no card required</Link>
+          <Link href="/use-cases" style={{ background:"transparent", border:"1px solid rgba(129,140,248,0.3)", color:"#818CF8", fontSize:15, fontWeight:500, padding:"14px 30px", borderRadius:10, textDecoration:"none" }}>See use cases →</Link>
+        </div>
+
+        {/* Social proof */}
+        <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:10, marginBottom:52 }}>
+          <div style={{ display:"flex" }}>
+            {["KR","AM","PS","RK"].map((i,n) => (
+              <div key={i} style={{ width:28, height:28, borderRadius:"50%", background:`hsl(${240+n*15},50%,${30+n*5}%)`, border:"2px solid #0C0E1A", marginLeft:n>0?-8:0, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:600, color:"#C7D2FE" }}>{i}</div>
+            ))}
+          </div>
+          <span style={{ fontSize:12, color:"#6B7280" }}>40+ BPO companies and founders in early access · India</span>
+        </div>
+
+        {/* Pipeline widget */}
+        <div style={{ position:"relative", zIndex:1, maxWidth:440, width:"100%" }}>
+          <div style={{ background:"rgba(13,15,26,0.92)", border:"1px solid rgba(79,70,229,0.3)", borderRadius:16, padding:"20px 22px", backdropFilter:"blur(12px)" }}>
+            <div style={{ fontSize:13, fontWeight:600, color:"#F9FAFB", marginBottom:4 }}>Hiring pipeline — Senior BPO Analyst</div>
+            <div style={{ fontSize:11, color:"#818CF8", marginBottom:14 }}>AI ranked 400 CVs · Each candidate on their preferred channel</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {CANDIDATES.map((c,i) => (
+                <div key={c.name} style={{ background:c.hi?"rgba(79,70,229,0.1)":"rgba(255,255,255,0.03)", border:`1px solid ${c.hi?"rgba(129,140,248,0.35)":"rgba(255,255,255,0.07)"}`, borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:10, opacity:1, animation:`zfadein 0.4s ease ${i*100}ms both` }}>
+                  <div style={{ width:32, height:32, borderRadius:"50%", background:"rgba(79,70,229,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:600, color:"#C7D2FE", flexShrink:0 }}>{c.name.split(" ").map(n=>n[0]).join("")}</div>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontSize:12, fontWeight:600, color:"#F9FAFB" }}>{c.name}</div>
+                    <div style={{ fontSize:10, color:"#9CA3AF" }}>{c.role}</div>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:3 }}>
+                    <div style={{ fontSize:11, fontWeight:700, color:c.hi?"#C7D2FE":"#6B7280" }}>{c.score}</div>
+                    <div style={{ display:"flex", gap:4 }}>
+                      <div style={{ fontSize:9, fontWeight:500, color:SC[c.stage], background:`${SC[c.stage]}18`, padding:"2px 7px", borderRadius:20 }}>{c.stage}</div>
+                      <div style={{ fontSize:9, fontWeight:500, color:CC[c.ch], background:`${CC[c.ch]}18`, padding:"2px 7px", borderRadius:20 }}>{c.ch}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop:14, paddingTop:12, borderTop:"1px solid rgba(255,255,255,0.06)", display:"flex", justifyContent:"space-between" }}>
+              <span style={{ fontSize:11, color:"#6B7280" }}>400 CVs → shortlist in 3 min</span>
+              <span style={{ fontSize:11, fontWeight:500, color:"#4F46E5", background:"rgba(79,70,229,0.1)", padding:"4px 12px", borderRadius:20 }}>Unlock contacts →</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── PLATFORM MODULES ────────────────────────────────────────────────── */}
-      <section id="product" style={{ padding: "100px 32px", background: "#0C0E1A" }}>
-        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", color: "#818CF8", textAlign: "center", marginBottom: 12 }}>
-            THE PLATFORM
-          </p>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, letterSpacing: "-0.02em", textAlign: "center", color: "#FFFFFF", marginBottom: 12 }}>
-            Three intelligence layers.
-          </h2>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, letterSpacing: "-0.02em", textAlign: "center", color: "#818CF8", marginBottom: 16 }}>
-            One unified system.
-          </h2>
-          <p style={{ fontSize: 15, color: "#9CA3AF", textAlign: "center", maxWidth: 560, margin: "0 auto 64px" }}>
-            Hire the right people. Keep them engaged. Make every people decision with data.
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
-            {MODULES.map((mod, i) => (
-              <div key={mod.name} style={{
-                background: "#13152A",
-                border: `1px solid ${mod.accentColor}30`,
-                borderRadius: 16,
-                padding: "32px 28px",
-                position: "relative",
-                overflow: "hidden",
-                transition: "border-color 0.2s, transform 0.2s",
-                cursor: "default",
-              }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = `${mod.accentColor}60`;
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = `${mod.accentColor}30`;
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                }}
+      {/* ── PROBLEM ── */}
+      <section style={{ background:"#060A12", borderTop:"1px solid rgba(255,255,255,0.05)", padding:"80px 32px" }}>
+        <div style={{ maxWidth:960, margin:"0 auto" }}>
+          <Tag color="#EF4444">THE PROBLEM</Tag>
+          <h2 style={{ fontSize:"clamp(28px,4vw,48px)", fontWeight:700, letterSpacing:"-0.03em", textAlign:"center", margin:"0 0 12px", color:"#FFFFFF" }}>Monday morning. 400 CVs.</h2>
+          <p style={{ fontSize:16, color:"#9CA3AF", textAlign:"center", maxWidth:540, margin:"0 auto 48px", lineHeight:1.6 }}>Every HR manager in India knows this feeling. Zorvis exists because this system is broken — and nobody fixed it for SMEs.</p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:14 }}>
+            {PAIN.map(p => (
+              <div key={p.h} style={{ background:`${p.c}06`, border:`1px solid ${p.c}22`, borderRadius:12, padding:"20px 22px", display:"flex", alignItems:"flex-start", gap:14, transition:"border-color 0.2s" }}
+                onMouseEnter={e=>(e.currentTarget.style.borderColor=`${p.c}50`)}
+                onMouseLeave={e=>(e.currentTarget.style.borderColor=`${p.c}22`)}
               >
-                {/* Top accent bar */}
-                <div style={{
-                  position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                  background: mod.accentColor, opacity: 0.7,
-                }} />
+                <span style={{ fontSize:22, flexShrink:0 }}>{p.icon}</span>
+                <div><div style={{ fontSize:14, fontWeight:600, color:"#F9FAFB", marginBottom:5 }}>{p.h}</div><div style={{ fontSize:12, color:p.c, opacity:0.85, lineHeight:1.55 }}>{p.b}</div></div>
+              </div>
+            ))}
+          </div>
+          <p style={{ textAlign:"center", marginTop:40, fontSize:16 }}>
+            <strong style={{ color:"#FFFFFF" }}>Zorvis solves all of this. </strong>
+            <span style={{ color:"#818CF8" }}>One platform. Starting free.</span>
+          </p>
+        </div>
+      </section>
 
-                {/* Module number */}
-                <div style={{
-                  fontSize: 56, fontWeight: 800, letterSpacing: "-0.04em",
-                  color: mod.accentColor, opacity: 0.12, lineHeight: 1,
-                  position: "absolute", top: 20, right: 24,
-                  userSelect: "none",
-                }}>
-                  {mod.num}
-                </div>
-
-                <div style={{
-                  display: "inline-block",
-                  background: `${mod.accentColor}15`,
-                  border: `1px solid ${mod.accentColor}30`,
-                  borderRadius: 100,
-                  padding: "3px 12px",
-                  fontSize: 11, fontWeight: 600,
-                  color: mod.accentColor,
-                  letterSpacing: "0.05em",
-                  marginBottom: 16,
-                }}>
-                  {mod.tagline}
-                </div>
-
-                <h3 style={{ fontSize: 26, fontWeight: 700, color: "#FFFFFF", margin: "0 0 10px", letterSpacing: "-0.01em" }}>
-                  {mod.name}
-                </h3>
-                <p style={{ fontSize: 13, color: "#9CA3AF", lineHeight: 1.6, marginBottom: 24 }}>
-                  {mod.desc}
-                </p>
-
-                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px", display: "flex", flexDirection: "column", gap: 8 }}>
-                  {mod.features.map(f => (
-                    <li key={f} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "#D1D5DB" }}>
-                      <div style={{
-                        width: 5, height: 5, borderRadius: "50%",
-                        background: mod.accentColor, flexShrink: 0,
-                      }} />
+      {/* ── THREE MODULES ── */}
+      <section style={{ padding:"100px 32px", background:"#0C0E1A" }}>
+        <div style={{ maxWidth:1040, margin:"0 auto" }}>
+          <Tag>THE PLATFORM</Tag>
+          <h2 style={{ fontSize:"clamp(28px,4vw,48px)", fontWeight:700, letterSpacing:"-0.03em", textAlign:"center", margin:"0 0 6px", color:"#FFFFFF" }}>Three intelligence layers.</h2>
+          <h2 style={{ fontSize:"clamp(28px,4vw,48px)", fontWeight:700, letterSpacing:"-0.03em", textAlign:"center", margin:"0 0 14px", color:"#818CF8" }}>One unified system.</h2>
+          <p style={{ fontSize:15, color:"#9CA3AF", textAlign:"center", maxWidth:520, margin:"0 auto 60px" }}>Hire the right people. Keep them engaged on their preferred channel. Make every people decision backed by compounding data.</p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))", gap:20 }}>
+            {MODULES.map(m => (
+              <div key={m.name} style={{ background:"#13152A", border:`1px solid ${m.accentColor}28`, borderRadius:16, padding:"30px 26px", position:"relative", overflow:"hidden", transition:"border-color 0.2s,transform 0.2s" }}
+                onMouseEnter={e=>{ (e.currentTarget as HTMLDivElement).style.borderColor=`${m.accentColor}55`; (e.currentTarget as HTMLDivElement).style.transform="translateY(-3px)"; }}
+                onMouseLeave={e=>{ (e.currentTarget as HTMLDivElement).style.borderColor=`${m.accentColor}28`; (e.currentTarget as HTMLDivElement).style.transform="translateY(0)"; }}
+              >
+                <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:m.accentColor, opacity:0.6 }}/>
+                <div style={{ fontSize:52, fontWeight:800, letterSpacing:"-0.04em", color:m.accentColor, opacity:0.1, lineHeight:1, position:"absolute", top:18, right:22, userSelect:"none" }}>{m.num}</div>
+                <div style={{ display:"inline-block", background:`${m.accentColor}14`, border:`1px solid ${m.accentColor}28`, borderRadius:100, padding:"3px 12px", fontSize:11, fontWeight:600, color:m.accentColor, letterSpacing:"0.04em", marginBottom:14 }}>{m.tagline}</div>
+                <h3 style={{ fontSize:24, fontWeight:700, color:"#FFFFFF", margin:"0 0 10px" }}>{m.name}</h3>
+                <p style={{ fontSize:13, color:"#9CA3AF", lineHeight:1.65, marginBottom:20 }}>{m.desc}</p>
+                <ul style={{ listStyle:"none", padding:0, margin:"0 0 20px", display:"flex", flexDirection:"column", gap:7 }}>
+                  {m.features.slice(0,4).map(f=>(
+                    <li key={f} style={{ display:"flex", alignItems:"flex-start", gap:9, fontSize:13, color:"#D1D5DB" }}>
+                      <div style={{ width:5, height:5, borderRadius:"50%", background:m.accentColor, flexShrink:0, marginTop:5 }}/>
                       {f}
                     </li>
                   ))}
                 </ul>
-
-                <div style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  background: `${mod.statusColor}15`,
-                  border: `1px solid ${mod.statusColor}30`,
-                  borderRadius: 100,
-                  padding: "4px 12px",
-                  fontSize: 11, fontWeight: 600,
-                  color: mod.statusColor,
-                }}>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: mod.statusColor }} />
-                  {mod.status}
+                <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:`${m.statusColor}14`, border:`1px solid ${m.statusColor}28`, borderRadius:100, padding:"4px 12px", fontSize:11, fontWeight:600, color:m.statusColor }}>
+                  <div style={{ width:6, height:6, borderRadius:"50%", background:m.statusColor }}/>{m.status}
                 </div>
               </div>
             ))}
           </div>
+          <div style={{ textAlign:"center", marginTop:40 }}>
+            <Link href="/product" style={{ fontSize:14, color:"#818CF8", textDecoration:"none", borderBottom:"1px solid rgba(129,140,248,0.3)", paddingBottom:2 }}>Explore the full platform →</Link>
+          </div>
         </div>
       </section>
 
-      {/* ── STATS BAR ───────────────────────────────────────────────────────── */}
-      <section style={{
-        background: "#060A12",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
-        padding: "48px 32px",
-      }}>
-        <div style={{
-          maxWidth: 900, margin: "0 auto",
-          display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 32,
-          textAlign: "center",
-        }}>
-          {[
-            { num: "3 min", label: "400 CVs ranked" },
-            { num: "₹0",    label: "to start — free forever" },
-            { num: "1",     label: "platform, post to signed offer" },
-          ].map(s => (
-            <div key={s.num}>
-              <div style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, letterSpacing: "-0.03em", color: "#FFFFFF", lineHeight: 1 }}>
-                {s.num}
-              </div>
-              <div style={{ fontSize: 13, color: "#9CA3AF", marginTop: 6 }}>{s.label}</div>
+      {/* ── STATS ── */}
+      <section style={{ background:"#060A12", borderTop:"1px solid rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.05)", padding:"52px 32px" }}>
+        <div style={{ maxWidth:880, margin:"0 auto", display:"flex", justifyContent:"space-around", flexWrap:"wrap", gap:32, textAlign:"center" }}>
+          {[{t:3,s:" min",l:"to rank 400 CVs"},{t:0,p:"₹",l:"to start — free forever"},{t:1,l:"platform, job post to signed offer"}].map((s,i)=>(
+            <div key={i}>
+              <div style={{ fontSize:"clamp(32px,5vw,52px)", fontWeight:700, letterSpacing:"-0.03em", color:"#FFFFFF", lineHeight:1 }}>{s.p??""}<Counter target={s.t} suffix={s.s??""}/></div>
+              <div style={{ fontSize:13, color:"#9CA3AF", marginTop:6 }}>{s.l}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── MARKETS ─────────────────────────────────────────────────────────── */}
-      <section style={{ padding: "80px 32px", background: "#0C0E1A" }}>
-        <div style={{ maxWidth: 880, margin: "0 auto" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", color: "#818CF8", textAlign: "center", marginBottom: 12 }}>
-            MARKETS
-          </p>
-          <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 700, letterSpacing: "-0.02em", textAlign: "center", color: "#FFFFFF", marginBottom: 48 }}>
-            Built for India. Ready for UAE.
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}>
+      {/* ── MARKETS ── */}
+      <section style={{ padding:"80px 32px" }}>
+        <div style={{ maxWidth:880, margin:"0 auto" }}>
+          <Tag>MARKETS</Tag>
+          <h2 style={{ fontSize:"clamp(26px,4vw,42px)", fontWeight:700, letterSpacing:"-0.02em", textAlign:"center", margin:"0 0 48px", color:"#FFFFFF" }}>Built for India. Ready for UAE.</h2>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))", gap:20 }}>
             {[
-              {
-                flag: "🇮🇳", country: "India",
-                items: ["BPO · Staffing · SME hiring", "Naukri + LinkedIn integration", "₹9,999/mo base · Free tier"],
-                status: "Phase 1 · Live", statusColor: "#10B981", accentColor: "#4F46E5",
-              },
-              {
-                flag: "🇦🇪", country: "UAE",
-                items: ["Blue collar · Hospitality · WPS", "Emirates ID OCR · Arabic offers", "AED 549/mo base"],
-                status: "Phase 1 · Month 7", statusColor: "#818CF8", accentColor: "#818CF8",
-              },
-            ].map(m => (
-              <div key={m.country} style={{
-                background: "#13152A",
-                border: `1px solid ${m.accentColor}25`,
-                borderRadius: 16,
-                padding: "28px 28px",
-              }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>{m.flag}</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "#FFFFFF", marginBottom: 16 }}>{m.country}</div>
-                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px", display: "flex", flexDirection: "column", gap: 6 }}>
-                  {m.items.map(item => (
-                    <li key={item} style={{ fontSize: 13, color: "#9CA3AF", display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: "50%", background: m.accentColor, flexShrink: 0 }} />
-                      {item}
+              { flag:"🇮🇳", country:"India", headline:"Built for BPOs, staffing agencies, and SMEs hiring at scale.", items:["Naukri + LinkedIn integration","Assessments on any channel","₹9,999/mo · Free tier always available"], status:"Phase 1 · Live", sc:"#10B981", ac:"#4F46E5" },
+              { flag:"🇦🇪", country:"UAE", headline:"The only platform that solves pre-arrival screening and WPS compliance in one system.", items:["Emirates ID OCR · WPS SIF auto-generated","Bilingual Arabic / English offers","AED 549/mo · Visa expiry alerts"], status:"Phase 1 · Month 7", sc:"#818CF8", ac:"#818CF8" },
+            ].map(m=>(
+              <div key={m.country} style={{ background:"#13152A", border:`1px solid ${m.ac}22`, borderRadius:16, padding:"28px 26px" }}>
+                <div style={{ fontSize:28, marginBottom:10 }}>{m.flag}</div>
+                <div style={{ fontSize:20, fontWeight:700, color:"#FFFFFF", marginBottom:6 }}>{m.country}</div>
+                <div style={{ fontSize:13, color:"#9CA3AF", lineHeight:1.6, marginBottom:16 }}>{m.headline}</div>
+                <ul style={{ listStyle:"none", padding:0, margin:"0 0 18px", display:"flex", flexDirection:"column", gap:6 }}>
+                  {m.items.map(item=>(
+                    <li key={item} style={{ fontSize:13, color:"#D1D5DB", display:"flex", alignItems:"center", gap:8 }}>
+                      <div style={{ width:4, height:4, borderRadius:"50%", background:m.ac, flexShrink:0 }}/>{item}
                     </li>
                   ))}
                 </ul>
-                <div style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  background: `${m.statusColor}15`,
-                  border: `1px solid ${m.statusColor}30`,
-                  borderRadius: 100,
-                  padding: "4px 12px",
-                  fontSize: 11, fontWeight: 600,
-                  color: m.statusColor,
-                }}>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: m.statusColor }} />
-                  {m.status}
+                <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:`${m.sc}14`, border:`1px solid ${m.sc}28`, borderRadius:100, padding:"4px 12px", fontSize:11, fontWeight:600, color:m.sc }}>
+                  <div style={{ width:6, height:6, borderRadius:"50%", background:m.sc }}/>{m.status}
                 </div>
               </div>
             ))}
@@ -653,137 +232,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIAL ─────────────────────────────────────────────────────── */}
-      <section style={{
-        background: "#060A12",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        padding: "80px 32px",
-      }}>
-        <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", color: "#818CF8", marginBottom: 32 }}>
-            EARLY CUSTOMERS
-          </p>
-          <div style={{
-            background: "#13152A",
-            border: "1px solid rgba(129,140,248,0.2)",
-            borderRadius: 16,
-            padding: "36px 40px",
-          }}>
-            <p style={{ fontSize: 18, fontWeight: 500, color: "#F9FAFB", lineHeight: 1.6, margin: "0 0 28px", fontStyle: "italic" }}>
-              "We used to spend 6 hours screening CVs every Monday. Zorvis does it in minutes. Our shortlist quality went up."
+      {/* ── TESTIMONIAL ── */}
+      <section style={{ background:"#060A12", borderTop:"1px solid rgba(255,255,255,0.05)", padding:"80px 32px" }}>
+        <div style={{ maxWidth:660, margin:"0 auto", textAlign:"center" }}>
+          <Tag>EARLY CUSTOMER</Tag>
+          <div style={{ background:"#13152A", border:"1px solid rgba(129,140,248,0.18)", borderRadius:16, padding:"40px 36px" }}>
+            <div style={{ fontSize:44, color:"#4F46E5", opacity:0.4, lineHeight:1, marginBottom:16 }}>"</div>
+            <p style={{ fontSize:18, fontWeight:500, color:"#F9FAFB", lineHeight:1.65, margin:"0 0 28px", fontStyle:"italic" }}>
+              We used to spend 6 hours screening CVs every Monday. Zorvis does it in under 20 minutes. My shortlist quality improved and I can defend every decision with a score.
             </p>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: "50%",
-                background: "rgba(79,70,229,0.3)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 14, fontWeight: 700, color: "#C7D2FE",
-              }}>PS</div>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF" }}>Priya Sharma</div>
-                <div style={{ fontSize: 12, color: "#9CA3AF" }}>HR Manager · BPO company · Bangalore</div>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:12 }}>
+              <div style={{ width:44, height:44, borderRadius:"50%", background:"rgba(79,70,229,0.25)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:700, color:"#C7D2FE" }}>PS</div>
+              <div style={{ textAlign:"left" }}>
+                <div style={{ fontSize:14, fontWeight:600, color:"#FFFFFF" }}>Priya Sharma</div>
+                <div style={{ fontSize:12, color:"#9CA3AF" }}>HR Manager · BPO Company · Bangalore · 200 employees</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── FINAL CTA ───────────────────────────────────────────────────────── */}
-      <section style={{
-        background: "#0C0E1A",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        padding: "100px 32px",
-        textAlign: "center",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-          width: 500, height: 300,
-          background: "radial-gradient(ellipse, rgba(79,70,229,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
-            <ZorvisLogo size={48} theme="dark" showWordmark={false} />
+      {/* ── CTA ── */}
+      <section style={{ padding:"100px 32px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:500, height:300, background:"radial-gradient(ellipse,rgba(79,70,229,0.1) 0%,transparent 70%)", pointerEvents:"none" }}/>
+        <div style={{ position:"relative", zIndex:1 }}>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom:24 }}><ZMark size={52}/></div>
+          <h2 style={{ fontSize:"clamp(26px,4vw,44px)", fontWeight:700, letterSpacing:"-0.02em", color:"#FFFFFF", margin:"0 0 8px" }}>The force behind your</h2>
+          <h2 style={{ fontSize:"clamp(26px,4vw,44px)", fontWeight:700, letterSpacing:"-0.02em", color:"#818CF8", margin:"0 0 18px" }}>people vision.</h2>
+          <p style={{ fontSize:15, color:"#6B7280", marginBottom:40, maxWidth:460, margin:"0 auto 40px", lineHeight:1.6 }}>{BRAND.meaning}</p>
+          <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
+            <Link href="/waitlist" style={{ background:"#4F46E5", color:"#FFFFFF", fontSize:15, fontWeight:600, padding:"14px 32px", borderRadius:10, textDecoration:"none" }}>Start free today</Link>
+            <Link href="/pricing" style={{ border:"1px solid rgba(129,140,248,0.3)", color:"#818CF8", fontSize:15, fontWeight:500, padding:"14px 32px", borderRadius:10, textDecoration:"none" }}>See pricing</Link>
           </div>
-          <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 8px" }}>
-            The force behind your
-          </h2>
-          <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.02em", color: "#818CF8", margin: "0 0 20px" }}>
-            people vision.
-          </h2>
-          <p style={{ fontSize: 15, color: "#6B7280", marginBottom: 40, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
-            Zor is force. Vis is vision. Zorvis is the AI layer your people decisions deserve.
-            Free forever on the starter plan.
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="/waitlist" style={{
-              background: "#4F46E5",
-              color: "#FFFFFF",
-              fontSize: 15, fontWeight: 600,
-              padding: "14px 32px",
-              borderRadius: 10,
-              textDecoration: "none",
-              transition: "background 0.2s",
-            }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#4338CA")}
-              onMouseLeave={e => (e.currentTarget.style.background = "#4F46E5")}
-            >
-              Start free today
-            </a>
-            <a href="/demo" style={{
-              background: "transparent",
-              border: "1px solid rgba(129,140,248,0.3)",
-              color: "#818CF8",
-              fontSize: 15, fontWeight: 500,
-              padding: "14px 32px",
-              borderRadius: 10,
-              textDecoration: "none",
-            }}>
-              Book a demo
-            </a>
-          </div>
+          <p style={{ fontSize:12, color:"#4B5563", marginTop:18 }}>{BRAND.free}</p>
         </div>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────────────────────────────── */}
-      <footer style={{
-        background: "#060A12",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        padding: "32px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: 16,
-      }}>
-        <ZorvisLogo size={20} theme="dark" showWordmark />
-        <div style={{ fontSize: 12, color: "#4B5563" }}>
-          © 2026 Zorvis AI Technologies Pvt Ltd · India · UAE
-        </div>
-        <div style={{ display: "flex", gap: 20 }}>
-          {["Privacy", "Terms", "DPDP Compliant"].map(l => (
-            <a key={l} href="#" style={{ fontSize: 12, color: "#4B5563", textDecoration: "none" }}>{l}</a>
-          ))}
-        </div>
-      </footer>
-
-      {/* ── GLOBAL STYLES ───────────────────────────────────────────────────── */}
+      <Footer/>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { background: #0C0E1A; }
-        @media (max-width: 640px) {
-          .desktop-nav { display: none !important; }
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        section { animation: fadeUp 0.6s ease both; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        @keyframes zpulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        @keyframes zfadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       `}</style>
     </div>
   );
