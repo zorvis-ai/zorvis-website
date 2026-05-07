@@ -36,6 +36,17 @@ export const metadata: Metadata = {
   authors: [{ name: "Zorvis AI", url: "https://zorvis.ai" }],
   creator: "Zorvis AI Technologies Pvt Ltd",
   publisher: "Zorvis AI Technologies Pvt Ltd",
+  // ── Favicons — Next.js App Router metadata API ──────────────────────────
+  // Files must be in /public folder
+  icons: {
+    icon: [
+      { url: "/favicon.ico",        sizes: "any" },
+      { url: "/favicon-16x16.png",  sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png",  sizes: "32x32", type: "image/png" },
+    ],
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+  },
+  // ── Open Graph ────────────────────────────────────────────────────────────
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -73,10 +84,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    // Add your Google Search Console verification code here when ready
-    // google: "your-verification-code",
-  },
   alternates: {
     canonical: "https://zorvis.ai",
   },
@@ -98,19 +105,10 @@ const orgSchema = {
     priceCurrency: "INR",
     description: "Free forever starter plan",
   },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.8",
-    ratingCount: "42",
-  },
   publisher: {
     "@type": "Organization",
     name: "Zorvis AI Technologies Pvt Ltd",
     url: "https://zorvis.ai",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://zorvis.ai/logo.png",
-    },
     sameAs: [
       "https://www.linkedin.com/company/zorvis-ai",
       "https://twitter.com/zorvisai",
@@ -122,10 +120,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={dmSans.variable}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#4F46E5" />
         <script
           type="application/ld+json"
