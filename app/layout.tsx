@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | Zorvis AI",
   },
   description:
-    "AI-powered hiring, HR operations, and people intelligence for India and UAE SMEs. Rank 400 CVs in 3 minutes. Assessments on any channel. Digital offers. Free forever tier.",
+    "AI-powered hiring, HR operations, and people intelligence for India and UAE SMEs. Rank 400 CVs in 3 minutes. Assessments on every channel. Digital offers. Free forever tier.",
   keywords: [
     "HR software India",
     "AI recruitment software India",
@@ -36,16 +36,21 @@ export const metadata: Metadata = {
   authors: [{ name: "Zorvis AI", url: "https://zorvis.ai" }],
   creator: "Zorvis AI Technologies Pvt Ltd",
   publisher: "Zorvis AI Technologies Pvt Ltd",
-  // ── Favicons — Next.js App Router metadata API ──────────────────────────
-  // Files must be in /public folder
+
+  // ── Favicons ─────────────────────────────────────────────────────────────
   icons: {
     icon: [
-      { url: "/favicon.ico",        sizes: "any" },
-      { url: "/favicon-16x16.png",  sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png",  sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico",       sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    apple: {
+      url: "/apple-touch-icon.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
   },
+
   // ── Open Graph ────────────────────────────────────────────────────────────
   openGraph: {
     type: "website",
@@ -65,14 +70,17 @@ export const metadata: Metadata = {
       },
     ],
   },
+
+  // ── Twitter ───────────────────────────────────────────────────────────────
   twitter: {
     card: "summary_large_image",
     title: "Zorvis AI — People Intelligence Platform",
     description:
-      "Rank 400 CVs in 3 minutes. AI hiring + HR OS for India & UAE SMEs. Free forever tier.",
+      "Rank 400 CVs in 3 minutes. AI hiring and HR OS for India and UAE SMEs. Free forever tier.",
     images: ["/og-image.png"],
     creator: "@zorvisai",
   },
+
   robots: {
     index: true,
     follow: true,
@@ -84,6 +92,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+
   alternates: {
     canonical: "https://zorvis.ai",
   },
@@ -116,7 +125,11 @@ const orgSchema = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={dmSans.variable}>
       <head>
