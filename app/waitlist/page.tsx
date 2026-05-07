@@ -124,13 +124,17 @@ export default function WaitlistPage() {
             {done ? (
               <div style={{ textAlign: "center", padding: "12px 0" }}>
                 <div style={{ fontSize: 52, marginBottom: 16 }}>{state === "duplicate" ? "👋" : "🎉"}</div>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: "#0D1117", margin: "0 0 10px" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: "#0D1117", margin: "0 0 14px" }}>
                   {state === "duplicate" ? "You're already on the list." : "You're on the list."}
                 </h2>
-                <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.65, marginBottom: 28 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#EEF2FF", border: "1px solid #C7D2FE", borderRadius: 100, padding: "5px 14px", marginBottom: 16 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4F46E5", animation: "zpulse 2s infinite" }}/>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#4F46E5" }}>Launching July 2026</span>
+                </div>
+                <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.7, marginBottom: 24, maxWidth: 280, margin: "0 auto 24px" }}>
                   {state === "duplicate"
-                    ? "We already have your email. Expect a personal message within 48 hours."
-                    : "We'll reach out personally within 48 hours to set up your account."}
+                    ? "We already have your email. We're working hard on our July 2026 launch and will be in touch personally before then."
+                    : "We're working hard on our July 2026 launch. We'll reach out personally before then to walk you through the product and get your input."}
                 </p>
                 <Link href="/" style={{ display: "inline-block", background: "#4F46E5", color: "#FFFFFF", fontSize: 13, fontWeight: 600, padding: "10px 24px", borderRadius: 8, textDecoration: "none" }}>
                   Back to home
