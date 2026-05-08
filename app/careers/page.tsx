@@ -94,7 +94,7 @@ export default function CareersPage() {
 
   const set = (k: string, v: string | File | null) => setForm(f => ({ ...f, [k]: v }));
 
-  const handleFile = (file) => {
+  const handleFile = (file: File | null) => {
     if (!file) return;
     const allowed = ["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
     if (!allowed.includes(file.type)) { setError("Please upload a PDF or Word document."); return; }
