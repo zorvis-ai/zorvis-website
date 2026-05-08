@@ -92,7 +92,7 @@ export default function CareersPage() {
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: string, v: string | File | null) => setForm(f => ({ ...f, [k]: v }));
 
   const handleFile = (file) => {
     if (!file) return;
