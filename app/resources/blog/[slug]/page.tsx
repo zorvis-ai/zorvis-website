@@ -1,165 +1,257 @@
-import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Nav, Footer } from "@/components/Nav";
-import { ALL_POSTS } from "../posts";
-
-type Props = { params: { slug: string } };
+import { ALL_POSTS, type VisualModule } from "../posts";
 
 export async function generateStaticParams() {
   return ALL_POSTS.map(p => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }) {
   const post = ALL_POSTS.find(p => p.slug === params.slug);
   if (!post) return {};
   return {
-    title: post.title,
+    title: `${post.title} | Zorvis AI Blog`,
     description: post.description,
-    keywords: post.tags,
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      type: "article",
-      publishedTime: post.date,
-      authors: ["Zorvis AI"],
-      tags: post.tags,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-    },
-    alternates: {
-      canonical: `https://zorvis.ai/resources/blog/${post.slug}`,
-    },
+    openGraph: { title: post.title, description: post.description, type: "article" },
+    keywords: post.tags.join(", "),
   };
 }
 
-// Article body generator — structured content for each post
-function getArticleContent(slug: string): string[] {
-  // Each article gets 5 structured sections — enough for SEO value
-  // In production, replace with real CMS content
-  const post = ALL_POSTS.find(p => p.slug === slug);
-  if (!post) return [];
-  return [
-    `This is a comprehensive guide to ${post.title.toLowerCase()}. Understanding this topic is essential for HR managers and founders building high-performance teams in India and the UAE.`,
-    `The core challenge here is one that every SME HR team faces: the tools built for enterprise don't translate to your context, and the manual processes don't scale. This guide walks through a practical approach.`,
-    `When we analysed data from early Zorvis AI customers across India and the UAE, a consistent pattern emerged. The companies that solve this problem well share a few common practices — all of which can be implemented without enterprise budgets or dedicated HR teams.`,
-    `The most important thing to understand is that this isn't primarily a technology problem. It's a process problem. The right technology makes a good process more efficient — but it can't replace one.`,
-    `If you're an HR manager or founder looking to improve your approach to ${post.category.toLowerCase()}, the starting point is always the same: understand your specific context before selecting any tool or process. What works for a 500-person BPO in Bangalore may not work for a 50-person hospitality business in Dubai.`,
-  ];
+function StatGrid({ data }: { data: VisualModule["data"] }) {
+  const { title, stats } = data as { title: string; stats: { value: string; label: string; color: string }[] };
+  return (
+    <div style={{ background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:14, padding:"28px 24px", margin:"28px 0" }}>
+      <div style={{ fontSize:12, fontWeight:700, color:"#6B7280", letterSpacing:"0.1em", marginBottom:20, textTransform:"uppercase" }}>{title}</div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:16 }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{ background:"#FFFFFF", borderRadius:10, padding:"18px 16px", border:"1px solid #E2E6F0", textAlign:"center" }}>
+            <div style={{ fontSize:"clamp(22px,3vw,34px)", fontWeight:800, color:s.color, letterSpacing:"-0.02em", marginBottom:6 }}>{s.value}</div>
+            <div style={{ fontSize:12, color:"#6B7280", lineHeight:1.5 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default function BlogPostPage({ params }: Props) {
+function ComparisonTable({ data }: { data: VisualModule["data"] }) {
+  const { title, headers, rows, highlight } = data as { title: string; headers: string[]; rows: string[][]; highlight: number };
+  return (
+    <div style={{ margin:"28px 0", overflowX:"auto" }}>
+      <div style={{ fontSize:13, fontWeight:700, color:"#0D1117", marginBottom:12 }}>{title}</div>
+      <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13, minWidth:560 }}>
+        <thead>
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i} style={{ background: i > 0 && i-1 === highlight ? "#EEF2FF" : "#F7F8FC", padding:"10px 14px", textAlign:"left", fontWeight:600, color: i > 0 && i-1 === highlight ? "#4F46E5" : "#374151", border:"1px solid #E2E6F0", fontSize:12, whiteSpace:"nowrap" }}>
+                {i > 0 && i-1 === highlight && <span style={{ marginRight:4 }}>⭐</span>}{h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, ri) => (
+            <tr key={ri}>
+              {row.map((cell, ci) => (
+                <td key={ci} style={{ padding:"10px 14px", border:"1px solid #E2E6F0", background: ci > 0 && ci-1 === highlight ? "#F5F3FF" : "#FFFFFF", color: ci === 0 ? "#374151" : "#0D1117", fontWeight: ci === 0 ? 600 : 400 }}>
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ProcessFlow({ data }: { data: VisualModule["data"] }) {
+  const { title, steps } = data as { title: string; steps: { icon: string; title: string; desc: string; time: string }[] };
+  return (
+    <div style={{ margin:"28px 0", background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:14, padding:"24px" }}>
+      <div style={{ fontSize:13, fontWeight:700, color:"#0D1117", marginBottom:20 }}>{title}</div>
+      <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
+        {steps.map((s, i) => (
+          <div key={i} style={{ display:"flex", gap:16, alignItems:"flex-start", position:"relative" }}>
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flexShrink:0 }}>
+              <div style={{ width:42, height:42, borderRadius:"50%", background:"#4F46E5", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0 }}>{s.icon}</div>
+              {i < steps.length - 1 && <div style={{ width:2, height:28, background:"#C7D2FE", margin:"4px 0" }} />}
+            </div>
+            <div style={{ paddingBottom:i < steps.length - 1 ? 24 : 0, flex:1 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:3 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:"#0D1117" }}>{s.title}</div>
+                <div style={{ fontSize:11, color:"#4F46E5", background:"#EEF2FF", padding:"2px 8px", borderRadius:20, fontWeight:600 }}>{s.time}</div>
+              </div>
+              <div style={{ fontSize:12, color:"#6B7280", lineHeight:1.5 }}>{s.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Funnel({ data }: { data: VisualModule["data"] }) {
+  const { title, funnels } = data as { title: string; funnels: { label: string; steps: { label: string; value: number }[]; color: string }[] };
+  return (
+    <div style={{ margin:"28px 0", background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:14, padding:"24px" }}>
+      <div style={{ fontSize:13, fontWeight:700, color:"#0D1117", marginBottom:20 }}>{title}</div>
+      <div style={{ display:"grid", gridTemplateColumns:`repeat(${funnels.length},1fr)`, gap:20 }}>
+        {funnels.map((f, fi) => (
+          <div key={fi}>
+            <div style={{ fontSize:12, fontWeight:600, color:f.color, marginBottom:12, textAlign:"center" }}>{f.label}</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+              {f.steps.map((s, si) => (
+                <div key={si}>
+                  <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#374151", marginBottom:3 }}>
+                    <span>{s.label}</span>
+                    <span style={{ fontWeight:700 }}>{s.value}%</span>
+                  </div>
+                  <div style={{ height:8, background:"#E5E7EB", borderRadius:4, overflow:"hidden" }}>
+                    <div style={{ height:"100%", width:`${s.value}%`, background:f.color, borderRadius:4, transition:"width 0.6s ease" }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Timeline({ data }: { data: VisualModule["data"] }) {
+  const { title, items } = data as { title: string; items: { platform: string; time: string; desc: string }[] };
+  const colors = ["#EF4444", "#F59E0B", "#4F46E5"];
+  return (
+    <div style={{ margin:"28px 0", background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:14, padding:"24px" }}>
+      <div style={{ fontSize:13, fontWeight:700, color:"#0D1117", marginBottom:20 }}>{title}</div>
+      <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        {items.map((item, i) => (
+          <div key={i} style={{ display:"flex", gap:14, alignItems:"flex-start" }}>
+            <div style={{ width:90, flexShrink:0 }}>
+              <div style={{ fontSize:11, fontWeight:700, color:colors[i], background:`${colors[i]}15`, padding:"4px 8px", borderRadius:6, textAlign:"center" }}>{item.time}</div>
+            </div>
+            <div style={{ flex:1, background:"#FFFFFF", borderRadius:10, padding:"12px 14px", border:"1px solid #E2E6F0" }}>
+              <div style={{ fontSize:13, fontWeight:700, color:"#0D1117", marginBottom:4 }}>{item.platform}</div>
+              <div style={{ fontSize:12, color:"#6B7280", lineHeight:1.5 }}>{item.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function renderVisual(v: VisualModule) {
+  if (v.type === "stat-grid") return <StatGrid data={v.data} />;
+  if (v.type === "comparison-table") return <ComparisonTable data={v.data} />;
+  if (v.type === "process-flow") return <ProcessFlow data={v.data} />;
+  if (v.type === "funnel") return <Funnel data={v.data} />;
+  if (v.type === "timeline") return <Timeline data={v.data} />;
+  return null;
+}
+
+function renderText(content: string) {
+  return content.split("\n\n").map((para, i) => {
+    if (para.startsWith("**") && para.includes("**\n\n")) {
+      const [heading, ...rest] = para.split("\n\n");
+      return (
+        <div key={i}>
+          <h3 style={{ fontSize:16, fontWeight:700, color:"#0D1117", margin:"24px 0 8px", letterSpacing:"-0.01em" }}>
+            {heading.replace(/\*\*/g, "")}
+          </h3>
+          {rest.map((r, ri) => <p key={ri} style={{ fontSize:15, lineHeight:1.75, color:"#374151", margin:"0 0 14px" }}>{r}</p>)}
+        </div>
+      );
+    }
+    const html = para
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n/g, "<br/>");
+    if (para.startsWith("1.") || para.startsWith("-")) {
+      const items = para.split("\n").filter(Boolean);
+      return (
+        <ul key={i} style={{ margin:"0 0 16px", paddingLeft:20 }}>
+          {items.map((item, ii) => (
+            <li key={ii} style={{ fontSize:15, lineHeight:1.7, color:"#374151", marginBottom:6 }}
+              dangerouslySetInnerHTML={{ __html: item.replace(/^[\d]+\.\s+|^[-•]\s+/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") }} />
+          ))}
+        </ul>
+      );
+    }
+    return <p key={i} style={{ fontSize:15, lineHeight:1.75, color:"#374151", margin:"0 0 14px" }} dangerouslySetInnerHTML={{ __html: html }} />;
+  });
+}
+
+export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = ALL_POSTS.find(p => p.slug === params.slug);
   if (!post) notFound();
 
-  const related = ALL_POSTS
-    .filter(p => p.slug !== post.slug && (p.category === post.category || p.tags.some(t => post.tags.includes(t))))
-    .slice(0, 3);
-
-  const content = getArticleContent(post.slug);
-
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    dateModified: post.date,
-    author: { "@type": "Organization", name: "Zorvis AI", url: "https://zorvis.ai" },
-    publisher: { "@type": "Organization", name: "Zorvis AI", url: "https://zorvis.ai" },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `https://zorvis.ai/resources/blog/${post.slug}` },
-    keywords: post.tags.join(", "),
-  };
+  const related = ALL_POSTS.filter(p => p.slug !== post.slug && (p.category === post.category || p.featured)).slice(0, 3);
 
   return (
-    <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+    <div style={{ fontFamily:"'DM Sans',system-ui,sans-serif", background:"#FFFFFF", color:"#0D1117", minHeight:"100vh" }}>
       <Nav />
-
-      <article style={{ maxWidth: 720, margin: "0 auto", padding: "110px 32px 80px" }}>
-        {/* Breadcrumb */}
-        <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 28, fontSize: 12, color: "#9CA3AF" }}>
-          <Link href="/resources" style={{ color: "#9CA3AF", textDecoration: "none" }}>Resources</Link>
-          <span>›</span>
-          <Link href="/resources/blog" style={{ color: "#9CA3AF", textDecoration: "none" }}>Blog</Link>
-          <span>›</span>
-          <span style={{ color: "#374151" }}>{post.category}</span>
-        </div>
-
-        {/* Category */}
-        <div style={{ display: "inline-block", background: "#EEF2FF", border: "1px solid #C7D2FE", borderRadius: 100, padding: "4px 12px", fontSize: 11, fontWeight: 700, color: "#4F46E5", marginBottom: 16 }}>
-          {post.category.toUpperCase()}
-        </div>
-
-        {/* Title */}
-        <h1 style={{ fontSize: "clamp(24px,4vw,42px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 16px", color: "#0D1117" }}>
-          {post.title}
-        </h1>
-
-        {/* Meta */}
-        <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 32, paddingBottom: 24, borderBottom: "1px solid #E2E6F0", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#4F46E5" }}>Z</div>
-            <span style={{ fontSize: 13, color: "#374151", fontWeight: 500 }}>Zorvis AI</span>
+      <article style={{ maxWidth:720, margin:"0 auto", padding:"100px 24px 60px" }}>
+        {/* Header */}
+        <div style={{ marginBottom:32 }}>
+          <div style={{ display:"flex", gap:8, marginBottom:14 }}>
+            <div style={{ fontSize:10, fontWeight:700, color:"#4F46E5", background:"#EEF2FF", padding:"3px 10px", borderRadius:20 }}>{post.heroTag}</div>
+            {post.featured && <div style={{ fontSize:10, fontWeight:700, color:"#D97706", background:"#FEF3C7", padding:"3px 10px", borderRadius:20 }}>FEATURED</div>}
           </div>
-          <span style={{ fontSize: 12, color: "#9CA3AF" }}>{new Date(post.date).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })}</span>
-          <span style={{ fontSize: 12, color: "#9CA3AF" }}>{post.readTime} min read</span>
+          <h1 style={{ fontSize:"clamp(22px,4vw,38px)", fontWeight:800, letterSpacing:"-0.03em", lineHeight:1.25, margin:"0 0 16px", color:"#0D1117" }}>{post.title}</h1>
+          <p style={{ fontSize:16, color:"#6B7280", lineHeight:1.6, margin:"0 0 20px" }}>{post.description}</p>
+          <div style={{ display:"flex", gap:16, fontSize:13, color:"#9CA3AF", paddingBottom:24, borderBottom:"1px solid #F0F1F5" }}>
+            <span>{new Date(post.date).toLocaleDateString("en-IN", { day:"numeric", month:"long", year:"numeric" })}</span>
+            <span>·</span>
+            <span>{post.readTime} min read</span>
+            <span>·</span>
+            <span>{post.category}</span>
+          </div>
         </div>
 
-        {/* Description / lead */}
-        <p style={{ fontSize: 17, color: "#374151", lineHeight: 1.7, marginBottom: 32, fontWeight: 500 }}>
-          {post.description}
-        </p>
-
-        {/* Article body */}
-        {content.map((para, i) => (
-          <p key={i} style={{ fontSize: 15, color: "#374151", lineHeight: 1.8, marginBottom: 20 }}>{para}</p>
-        ))}
-
-        {/* CTA inside article */}
-        <div style={{ background: "#F7F8FF", border: "1px solid #C7D2FE", borderRadius: 12, padding: "24px 24px", margin: "36px 0", textAlign: "center" }}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#0D1117", marginBottom: 8 }}>See how Zorvis AI handles this</div>
-          <p style={{ fontSize: 13, color: "#6B7280", marginBottom: 16 }}>Free forever tier. No credit card. Setup in 15 minutes.</p>
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/waitlist" style={{ background: "#4F46E5", color: "#FFFFFF", fontSize: 13, fontWeight: 600, padding: "10px 22px", borderRadius: 8, textDecoration: "none" }}>Get early access</Link>
-            <Link href="/product" style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", color: "#374151", fontSize: 13, fontWeight: 500, padding: "10px 22px", borderRadius: 8, textDecoration: "none" }}>See the product</Link>
-          </div>
+        {/* Body */}
+        <div>
+          {post.sections.map((section, i) => (
+            <div key={i}>
+              {section.type === "text" && section.content && renderText(section.content)}
+              {section.type === "visual" && section.visual && renderVisual(section.visual)}
+            </div>
+          ))}
         </div>
 
         {/* Tags */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 40 }}>
-          {post.tags.map(tag => (
-            <span key={tag} style={{ background: "#F7F8FC", border: "1px solid #E2E6F0", borderRadius: 100, padding: "3px 10px", fontSize: 11, color: "#6B7280" }}>{tag}</span>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:32, paddingTop:24, borderTop:"1px solid #F0F1F5" }}>
+          {post.tags.map(t => (
+            <div key={t} style={{ fontSize:11, color:"#6B7280", background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:20, padding:"3px 10px" }}>{t}</div>
           ))}
         </div>
-      </article>
 
-      {/* RELATED */}
-      {related.length > 0 && (
-        <section style={{ background: "#F7F8FC", borderTop: "1px solid #E2E6F0", padding: "56px 32px" }}>
-          <div style={{ maxWidth: 720, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0D1117", marginBottom: 20 }}>Related articles</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 14 }}>
+        {/* CTA */}
+        <div style={{ margin:"40px 0", background:"linear-gradient(135deg,#EEF2FF,#F5F3FF)", border:"1px solid #C7D2FE", borderRadius:16, padding:"28px 24px", textAlign:"center" }}>
+          <div style={{ fontSize:18, fontWeight:700, color:"#0D1117", marginBottom:8 }}>See Zorvis AI in action</div>
+          <p style={{ fontSize:14, color:"#6B7280", marginBottom:20 }}>Join the waitlist for early access to the hire-to-retire People Intelligence Platform built for India and UAE SMEs.</p>
+          <Link href="/waitlist" style={{ background:"#4F46E5", color:"#FFFFFF", fontSize:14, fontWeight:600, padding:"11px 28px", borderRadius:8, textDecoration:"none", display:"inline-block", boxShadow:"0 4px 12px rgba(79,70,229,0.3)" }}>
+            Get early access →
+          </Link>
+        </div>
+
+        {/* Related */}
+        {related.length > 0 && (
+          <div>
+            <h3 style={{ fontSize:16, fontWeight:700, color:"#0D1117", marginBottom:16 }}>Related articles</h3>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:14 }}>
               {related.map(r => (
-                <Link key={r.slug} href={`/resources/blog/${r.slug}`} style={{ textDecoration: "none" }}>
-                  <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 10, padding: "16px 16px", transition: "box-shadow 0.15s" }}
-                    onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.07)")}
-                    onMouseLeave={e => (e.currentTarget.style.boxShadow = "none")}
-                  >
-                    <div style={{ fontSize: 10, fontWeight: 700, color: "#4F46E5", marginBottom: 6 }}>{r.category.toUpperCase()}</div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#0D1117", lineHeight: 1.4, marginBottom: 4 }}>{r.title}</div>
-                    <div style={{ fontSize: 11, color: "#9CA3AF" }}>{r.readTime} min read</div>
-                  </div>
+                <Link key={r.slug} href={`/resources/blog/${r.slug}`} style={{ textDecoration:"none", background:"#F7F8FC", border:"1px solid #E2E6F0", borderRadius:12, padding:"16px", display:"block" }}>
+                  <div style={{ fontSize:10, fontWeight:700, color:"#4F46E5", background:"#EEF2FF", padding:"2px 8px", borderRadius:20, display:"inline-block", marginBottom:8 }}>{r.heroTag}</div>
+                  <div style={{ fontSize:13, fontWeight:600, color:"#0D1117", lineHeight:1.4 }}>{r.title}</div>
                 </Link>
               ))}
             </div>
           </div>
-        </section>
-      )}
-
+        )}
+      </article>
       <Footer />
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');`}</style>
     </div>
