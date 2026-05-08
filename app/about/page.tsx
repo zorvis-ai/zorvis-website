@@ -31,7 +31,6 @@ export default function AboutPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      {/* HERO */}
       <section style={{ padding: "120px 32px 72px", maxWidth: 760, margin: "0 auto", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
         <Tag>OUR STORY</Tag>
         <h1 style={{ fontSize: "clamp(32px,6vw,58px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.08, margin: "0 0 22px", color: "#0D1117" }}>
@@ -44,7 +43,6 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* STATS */}
       <section style={{ padding: "0 32px 80px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 14 }}>
           {STATS.map(s => (
@@ -56,7 +54,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
       <section style={{ padding: "0 32px 100px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
           <Tag>THE JOURNEY</Tag>
@@ -79,7 +76,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TEAM */}
       <section style={{ background: "#F7F8FC", borderTop: "1px solid #E2E6F0", padding: "80px 32px" }}>
         <div style={{ maxWidth: 980, margin: "0 auto" }}>
           <Tag>THE TEAM</Tag>
@@ -89,10 +85,7 @@ export default function AboutPage() {
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 20 }}>
             {TEAM.map(m => (
-              <div key={m.name} style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 14, padding: "28px 24px", position: "relative", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "box-shadow 0.2s, border-color 0.2s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)"; (e.currentTarget as HTMLDivElement).style.borderColor = `${m.color}40`; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "#E2E6F0"; }}
-              >
+              <div key={m.name} style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 14, padding: "28px 24px", position: "relative", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: m.color }} />
                 <div style={{ width: 56, height: 56, borderRadius: "50%", background: `${m.color}14`, border: `2px solid ${m.color}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: m.color, marginBottom: 16 }}>{m.initials}</div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: "#0D1117", marginBottom: 3 }}>{m.name}</div>
@@ -108,7 +101,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* VALUES */}
       <section style={{ padding: "80px 32px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <Tag>HOW WE BUILD</Tag>
@@ -127,14 +119,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — points to careers page, no co-founder mention */}
       <section style={{ background: "#F7F8FC", borderTop: "1px solid #E2E6F0", padding: "72px 32px", textAlign: "center" }}>
-        <h2 style={{ fontSize: "clamp(20px,4vw,34px)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px", color: "#0D1117" }}>We're looking for a Technical Co-founder.</h2>
-        <p style={{ fontSize: 15, color: "#6B7280", marginBottom: 30, maxWidth: 480, margin: "0 auto 30px", lineHeight: 1.65 }}>
-          Built production SaaS at scale. Care about how India and UAE hire. Want to own the architecture of something that could touch millions of careers.
+        <h2 style={{ fontSize: "clamp(20px,4vw,34px)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px", color: "#0D1117" }}>We're building the founding engineering team.</h2>
+        <p style={{ fontSize: 15, color: "#6B7280", maxWidth: 480, margin: "0 auto 30px", lineHeight: 1.65 }}>
+          NCR, India. Full-time. Stock options that reflect your place on the founding team. If you want to own something real from Day 1, we're hiring.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/waitlist" style={{ background: "#4F46E5", color: "#FFFFFF", fontSize: 14, fontWeight: 600, padding: "11px 26px", borderRadius: 8, textDecoration: "none", boxShadow: "0 4px 12px rgba(79,70,229,0.25)" }}>Join the waitlist</Link>
+          <Link href="/careers" style={{ background: "#4F46E5", color: "#FFFFFF", fontSize: 14, fontWeight: 600, padding: "11px 26px", borderRadius: 8, textDecoration: "none", boxShadow: "0 4px 12px rgba(79,70,229,0.25)" }}>See open roles</Link>
           <a href="mailto:founder@zorvis.ai" style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", color: "#374151", fontSize: 14, fontWeight: 500, padding: "11px 26px", borderRadius: 8, textDecoration: "none" }}>Email founder@zorvis.ai</a>
         </div>
       </section>
