@@ -126,31 +126,27 @@ export default function CareersPage() {
     setError("");
     setSubmitting(true);
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-      const resumeFile = form.resume as File;
-      const ext = resumeFile.name.split(".").pop();
-      const filename = `${Date.now()}-${form.full_name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
-      const storageRes = await fetch(`${supabaseUrl}/storage/v1/object/resumes/${filename}`, {
+      const payload = new FormData();
+      payload.append("job_id", selectedJob.id);
+      payload.append("job_title", selectedJob.title);
+      payload.append("full_name", form.full_name);
+      payload.append("email", form.email);
+      payload.append("phone", form.phone);
+      payload.append("linkedin_url", form.linkedin_url);
+      payload.append("github_url", form.github_url);
+      payload.append("portfolio_url", form.portfolio_url);
+      payload.append("cover_note", form.cover_note);
+      payload.append("resume", form.resume);
+
+      const res = await fetch("/api/careers/submit", {
         method: "POST",
-        headers: { apikey: supabaseAnon, Authorization: `Bearer ${supabaseAnon}`, "Content-Type": resumeFile.type },
-        body: resumeFile,
+        body: payload,
       });
-      if (!storageRes.ok) throw new Error("Resume upload failed. Please try again.");
-      const resumeUrl = `${supabaseUrl}/storage/v1/object/resumes/${filename}`;
-      const dbRes = await fetch(`${supabaseUrl}/rest/v1/job_applications`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", apikey: supabaseAnon, Authorization: `Bearer ${supabaseAnon}`, Prefer: "return=minimal" },
-        body: JSON.stringify({
-          job_id: selectedJob.id, job_title: selectedJob.title,
-          full_name: form.full_name, email: form.email,
-          phone: form.phone || null, linkedin_url: form.linkedin_url || null,
-          github_url: form.github_url || null, portfolio_url: form.portfolio_url || null,
-          cover_note: form.cover_note || null,
-          resume_url: resumeUrl, resume_filename: resumeFile.name, source: "careers_page",
-        }),
-      });
-      if (!dbRes.ok) throw new Error("Application submission failed. Please try again.");
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null) as { error?: string } | null;
+        throw new Error(data?.error || "Application submission failed. Please try again.");
+      }
       setSubmitted(true);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Something went wrong. Please try again.");
