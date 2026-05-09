@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Nav, Footer, Tag } from "@/components/Nav";
 import { PRICING } from "@/components/brand";
 import Link from "next/link";
+import RoiCalculator from "../components/RoiCalculator";
 
 const COMPARE = [
   { f: "Active jobs",                   s: "3",            g: "Unlimited",    sc: "Unlimited" },
@@ -16,6 +17,50 @@ const COMPARE = [
   { f: "Agency white-label",            s: "—",            g: "—",            sc: "✓" },
   { f: "API access",                    s: "—",            g: "—",            sc: "✓" },
   { f: "Support",                       s: "Email",        g: "Priority",     sc: "SLA + dedicated" },
+];
+
+// Expanded FAQ — your existing 5 + 5 from PRFAQ doc, all pricing/value-relevant
+const FAQS = [
+  {
+    q: "Is the free tier really free forever?",
+    a: "Yes. No time limit. Keep using Starter as long as you want. Upgrade only when you need to unlock contact details or send more assessments.",
+  },
+  {
+    q: "What does the free tier actually include — and what's the catch?",
+    a: "Unlimited CVs uploaded. AI ranking with score bands and 2-line summaries. Industry percentile benchmark. Candidate names visible. What's locked: contact details (phone and email blurred) and pipeline actions (sending tests, generating offers, downloading data). The 'catch' is that you can't reach candidates without paying. The intelligence layer stays useful permanently.",
+  },
+  {
+    q: "Why ₹9,999/month when Zoho Recruit is ₹3,000-5,000?",
+    a: "Zoho Recruit is an applicant tracking database. It doesn't score, doesn't test, doesn't deliver assessments on WhatsApp, and doesn't generate digital offer letters. A Zoho user who wants aptitude testing pays ₹500-2,000 per candidate to a separate platform. On 50 hires a month, that's ₹25,000-100,000 in test costs alone — on top of their Zoho subscription. Zorvis bundles it all at zero marginal cost. Compared to Keka at ₹17,600/month for 50 employees with no AI testing, Zorvis Growth is 10% cheaper with structurally more capability.",
+  },
+  {
+    q: "Which channels can candidates use?",
+    a: "Email (default), WhatsApp, SMS, and a web portal. The candidate's preference is captured at first contact and respected through their entire journey.",
+  },
+  {
+    q: "Which channels do employees use for the HR OS?",
+    a: "WhatsApp, Slack, email, or the web portal — employee's choice. No forced app downloads.",
+  },
+  {
+    q: "What integrations come with paid plans on Day 1?",
+    a: "Job boards: Naukri, LinkedIn, Indeed, Bayt, GulfTalent (one-click multi-post). WhatsApp via WATI. Email via SendGrid. Calendars: Google + Outlook. BGV: SpringVerify. Storage: AWS S3. HRMS bi-directional sync (Darwinbox, Zoho People, Keka, GreytHR) and Meta Cloud API arrive in Months 3-6.",
+  },
+  {
+    q: "Can I use my own offer letter template?",
+    a: "Yes, on Scale and Enterprise. Upload your DOCX with logo and clauses; AI fills candidate data while preserving your formatting. Salary is never auto-filled — always entered manually. 5 India templates and 1 UAE bilingual template are included on every plan.",
+  },
+  {
+    q: "Can I use Zorvis for both India and UAE hiring?",
+    a: "Yes. The Scale plan includes the full UAE compliance module — WPS SIF, Emirates ID OCR, bilingual Arabic/English offers, and visa expiry calendar.",
+  },
+  {
+    q: "How is the free tier not a permanent free CV ranking tool?",
+    a: "Three things prevent it. Contacts are stripped server-side from the API response, so screenshots have no actionable data. New accounts get the same blurred view of the same CVs — there's nothing to gain by gaming. And the more you use the free tier, the more company-specific calibration data you build, which only becomes valuable on the paid pipeline. The architecture, not trust, closes the loop.",
+  },
+  {
+    q: "Is annual billing available?",
+    a: "Yes — annual billing is 2 months free (20% off) on Growth and Scale. Email founder@zorvis.ai to switch.",
+  },
 ];
 
 export default function PricingPage() {
@@ -130,26 +175,55 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ROI CALCULATOR — NEW */}
       <section style={{ padding: "72px 32px", background: "#FFFFFF" }}>
-        <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(22px,4vw,32px)", fontWeight: 800, letterSpacing: "-0.02em", textAlign: "center", margin: "0 0 40px", color: "#0D1117" }}>Common questions</h2>
-          {[
-            { q: "Is the free tier really free forever?", a: "Yes. No time limit. Keep using Starter as long as you want. Upgrade only when you need to unlock contact details or send more assessments." },
-            { q: "Which channels can candidates use?", a: "Email (default), WhatsApp, SMS, and a web portal. The candidate's preference is captured at first contact and respected through their entire journey." },
-            { q: "Which channels do employees use for the HR OS?", a: "WhatsApp, Slack, email, or the web portal — employee's choice. No forced app downloads." },
-            { q: "Can I use Zorvis for both India and UAE hiring?", a: "Yes. The Scale plan includes the full UAE compliance module — WPS SIF, Emirates ID OCR, bilingual Arabic/English offers, and visa expiry calendar." },
-            { q: "Is annual billing available?", a: "Yes — annual billing is 2 months free (20% off) on Growth and Scale. Email founder@zorvis.ai to switch." },
-          ].map(faq => (
-            <div key={faq.q} style={{ borderBottom: "1px solid #E2E6F0", padding: "18px 0" }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "#0D1117", marginBottom: 7 }}>{faq.q}</div>
-              <div style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.65 }}>{faq.a}</div>
-            </div>
-          ))}
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <Tag>SEE THE NUMBERS</Tag>
+            <h2 style={{ fontSize: "clamp(22px,4vw,34px)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px", color: "#0D1117" }}>
+              What would you actually save?
+            </h2>
+            <p style={{ fontSize: 15, color: "#6B7280", maxWidth: 520, margin: "0 auto", lineHeight: 1.6 }}>
+              Slide your numbers. Get an honest savings estimate in 30 seconds. We use conservative assumptions —
+              we'd rather you trust the number than be surprised after signing up.
+            </p>
+          </div>
+          <RoiCalculator />
         </div>
       </section>
 
-      <section style={{ background: "#F7F8FC", borderTop: "1px solid #E2E6F0", padding: "56px 32px", textAlign: "center" }}>
+      {/* FAQ — EXPANDED */}
+      <section style={{ padding: "72px 32px", background: "#F7F8FC", borderTop: "1px solid #E2E6F0" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <Tag>COMMON QUESTIONS</Tag>
+            <h2 style={{ fontSize: "clamp(22px,4vw,32px)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 8px", color: "#0D1117" }}>
+              Pricing and plan questions
+            </h2>
+            <p style={{ fontSize: 14, color: "#6B7280" }}>
+              Everything else? See the <Link href="/faq" style={{ color: "#4F46E5", textDecoration: "none", fontWeight: 600 }}>full FAQ</Link>.
+            </p>
+          </div>
+
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 12, padding: "8px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            {FAQS.map((faq, i) => (
+              <div
+                key={faq.q}
+                style={{
+                  borderBottom: i < FAQS.length - 1 ? "1px solid #E2E6F0" : "none",
+                  padding: "20px 0",
+                }}
+              >
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#0D1117", marginBottom: 8 }}>{faq.q}</div>
+                <div style={{ fontSize: 13.5, color: "#6B7280", lineHeight: 1.7 }}>{faq.a}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section style={{ background: "#FFFFFF", borderTop: "1px solid #E2E6F0", padding: "56px 32px", textAlign: "center" }}>
         <h2 style={{ fontSize: "clamp(20px,3vw,30px)", fontWeight: 800, margin: "0 0 10px", color: "#0D1117" }}>Start free. Upgrade when you're ready.</h2>
         <p style={{ color: "#6B7280", marginBottom: 24, fontSize: 14 }}>No credit card. First hire in days.</p>
         <Link href="/waitlist" style={{ background: "#4F46E5", color: "#FFFFFF", fontSize: 14, fontWeight: 600, padding: "12px 28px", borderRadius: 8, textDecoration: "none", boxShadow: "0 4px 12px rgba(79,70,229,0.25)" }}>Get early access →</Link>
