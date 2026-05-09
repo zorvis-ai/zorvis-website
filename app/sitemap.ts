@@ -1,30 +1,170 @@
-import { MetadataRoute } from "next";
-import { ALL_POSTS } from "./resources/blog/posts";
+import type { MetadataRoute } from "next";
 
-const BASE = "https://zorvis.ai";
+const BASE_URL = "https://zorvis.ai";
+
+// Last-modified date should be the most recent meaningful update across the site.
+// Update this when shipping major content changes — Google uses lastModified to prioritise crawl.
+const LAST_MAJOR_UPDATE = "2026-05-09";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const blogPosts = ALL_POSTS.map(post => ({
-    url: `${BASE}/resources/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: "monthly" as const,
-    priority: post.featured ? 0.8 : 0.6,
-  }));
-
   return [
-    { url: BASE, lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 },
-    { url: `${BASE}/product`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/use-cases`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/solutions`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/customers`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/waitlist`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/careers`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/resources`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/resources/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/resources/guides`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/resources/templates`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    ...blogPosts,
+    // ─── PRIMARY ACQUISITION PAGES ───
+    {
+      url: `${BASE_URL}/`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+    {
+      url: `${BASE_URL}/pricing`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/roi-calculator`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/how-it-works`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+
+    // ─── PRODUCT + SOLUTIONS ───
+    {
+      url: `${BASE_URL}/product`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/solutions`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/use-cases`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+
+    // ─── TRUST + DOC PAGES ───
+    {
+      url: `${BASE_URL}/faq`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/trust`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+
+    // ─── COMPANY ───
+    {
+      url: `${BASE_URL}/about`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/customers`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/careers`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "weekly",
+      priority: 0.65,
+    },
+
+    // ─── RESOURCES ───
+    {
+      url: `${BASE_URL}/resources`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/resources/blog`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "weekly",
+      priority: 0.75,
+    },
+    {
+      url: `${BASE_URL}/resources/templates`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${BASE_URL}/resources/guides`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+
+    // ─── CONVERSION ───
+    {
+      url: `${BASE_URL}/waitlist`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+
+    // ─── INDUSTRY ANCHOR PAGES (deep links to volume-hiring sections) ───
+    // These have hash anchors but Google indexes them; helps capture industry-specific search
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#bpo`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#retail`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#staffing`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#manufacturing`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#logistics`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/solutions/volume-hiring#hospitality`,
+      lastModified: LAST_MAJOR_UPDATE,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }
