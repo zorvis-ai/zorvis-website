@@ -17,6 +17,8 @@ import { Nav, Footer } from "@/components/Nav";
 import HeroAnimation from "./components/HeroAnimation";
 import RoiCalculator from "./components/RoiCalculator";
 import OldWayVsZorvis from "./components/OldWayVsZorvis";
+import AptitudeSampleWidget from "./components/AptitudeSampleWidget";
+import DataCompoundsAnimation from "./components/DataCompoundsAnimation";
 
 const INDUSTRIES = [
   { icon: Headphones, label: "BPO & Contact Centres", anchor: "bpo" },
@@ -45,15 +47,14 @@ export default function HomePage() {
               </div>
 
               <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight text-white md:text-5xl lg:text-6xl">
-                Hire 1,000 candidates without reading{" "}
+                400 CVs ranked in 3 minutes.{" "}
                 <span className="bg-gradient-to-r from-indigo-300 to-violet-300 bg-clip-text text-transparent">
-                  1,000 CVs.
+                  By an AI that gets smarter every hire.
                 </span>
               </h1>
 
               <p className="mt-6 text-lg leading-relaxed text-slate-300 md:text-xl">
-                Zorvis ranks every applicant in minutes, sends aptitude tests on WhatsApp, and shows you the top
-                candidates — before you've finished your morning coffee. Built for industries that hire at volume.
+                Zorvis is the hire-to-retire AI for India and UAE companies. Rank candidates, test on WhatsApp, predict performance at 90 days — all in one system that learns from every hire you make.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -139,8 +140,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ────────────── WHAT ZORVIS DOES ────────────── */}
+      {/* ────────────── APTITUDE SAMPLE WIDGET (NEW) ────────────── */}
       <section className="bg-white">
+        <div className="mx-auto max-w-3xl px-6 py-20 lg:px-8 lg:py-24">
+          <AptitudeSampleWidget />
+        </div>
+      </section>
+
+      {/* ────────────── WHAT ZORVIS DOES ────────────── */}
+      <section className="bg-slate-50">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
@@ -189,7 +197,7 @@ export default function HomePage() {
       </section>
 
       {/* ────────────── OLD WAY VS ZORVIS WAY ────────────── */}
-      <section className="bg-gradient-to-b from-white to-slate-50">
+      <section className="bg-gradient-to-b from-slate-50 to-white">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -203,6 +211,13 @@ export default function HomePage() {
           <div className="mt-12">
             <OldWayVsZorvis />
           </div>
+        </div>
+      </section>
+
+      {/* ────────────── DATA COMPOUNDS LOOP (NEW) ────────────── */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
+          <DataCompoundsAnimation />
         </div>
       </section>
 
