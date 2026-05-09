@@ -184,7 +184,7 @@ export default function RoiCalculator({ embedded = false }: { embedded?: boolean
                   max={2000}
                   step={50}
                   onChange={setHrCost}
-                  format={(v) => `₹${v}/hr`}
+                  format={(v) => `₹${v.toLocaleString("en-IN")}/hr`}
                 />
                 <Slider
                   label="Current cost per aptitude test"
@@ -193,7 +193,7 @@ export default function RoiCalculator({ embedded = false }: { embedded?: boolean
                   max={2500}
                   step={100}
                   onChange={setTestCost}
-                  format={(v) => `₹${v}`}
+                  format={(v) => `₹${v.toLocaleString("en-IN")}`}
                 />
               </div>
 
