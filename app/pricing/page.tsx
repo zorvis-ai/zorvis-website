@@ -11,10 +11,11 @@ const COMPARE = [
   { f: "CV ranking",                    s: "50/job",       g: "Unlimited",    sc: "Unlimited" },
   { f: "Contact details",               s: "Blurred",      g: "✓ Unlocked",   sc: "✓ Unlocked" },
   { f: "Assessments (any channel)",     s: "10/mo",        g: "200/mo",       sc: "Unlimited" },
+  { f: "AI phone interviews (Beta)",    s: "—",            g: "200/mo",       sc: "1,000/mo" },
   { f: "Digital offers + e-signature",  s: "—",            g: "✓",            sc: "✓" },
   { f: "Kanban pipeline",               s: "Basic",        g: "Full + auto",  sc: "Full + auto" },
   { f: "Employee HR OS",                s: "—",            g: "25 employees", sc: "100 employees" },
-  { f: "UAE compliance module",         s: "—",            g: "—",            sc: "✓" },
+  { f: "UAE compliance module",         s: "—",            g: "✓",            sc: "✓" },
   { f: "Agency white-label",            s: "—",            g: "—",            sc: "✓" },
   { f: "API access",                    s: "—",            g: "—",            sc: "✓" },
   { f: "Support",                       s: "Email",        g: "Priority",     sc: "SLA + dedicated" },
@@ -52,7 +53,7 @@ const FAQS = [
   },
   {
     q: "Can I use Zorvis for both India and UAE hiring?",
-    a: "Yes. The Scale plan includes the full UAE compliance module — WPS SIF, Emirates ID OCR, bilingual Arabic/English offers, and visa expiry calendar.",
+    a: "Yes. The UAE compliance module is included on Growth and Scale — WPS SIF, Emirates ID OCR, bilingual Arabic/English offers, and visa expiry calendar.",
   },
   {
     q: "How is the free tier not a permanent free CV ranking tool?",
@@ -178,6 +179,64 @@ export default function PricingPage() {
               </table>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* MODULE VISIBILITY GRID — what's in each plan */}
+      <section style={{ background: "#FFFFFF", borderTop: "1px solid #E2E6F0", padding: "72px 32px" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <Tag>WHAT'S IN EACH PLAN</Tag>
+            <h2 style={{ fontSize: "clamp(22px,4vw,34px)", fontWeight: 800, letterSpacing: "-0.02em", margin: "0 0 12px", color: "#0D1117" }}>
+              Modules and AI interview quotas, by plan
+            </h2>
+            <p style={{ fontSize: 15, color: "#6B7280", maxWidth: 540, margin: "0 auto", lineHeight: 1.6 }}>
+              Six modules, one platform. Free starts you on Hire. Paid plans unlock the full hire-to-retain flow with AI phone interviews included — no per-call fees.
+            </p>
+          </div>
+
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 720 }}>
+                <thead>
+                  <tr style={{ background: "#F7F8FC" }}>
+                    <th style={{ textAlign: "left", padding: "14px 18px", color: "#6B7280", fontWeight: 500, borderBottom: "1px solid #E2E6F0", minWidth: 180 }}>Module</th>
+                    <th style={{ textAlign: "center", padding: "14px 12px", color: "#374151", fontWeight: 700, borderBottom: "1px solid #E2E6F0" }}>Free</th>
+                    <th style={{ textAlign: "center", padding: "14px 12px", color: "#374151", fontWeight: 700, borderBottom: "1px solid #E2E6F0" }}>Starter</th>
+                    <th style={{ textAlign: "center", padding: "14px 12px", color: "#4F46E5", fontWeight: 700, borderBottom: "1px solid #E2E6F0" }}>Growth</th>
+                    <th style={{ textAlign: "center", padding: "14px 12px", color: "#374151", fontWeight: 700, borderBottom: "1px solid #E2E6F0" }}>Scale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { mod: "Hire", note: "AI ranking · Channel-native tests", launch: "JULY 2026", free: "Limited", s: "✓", g: "✓", sc: "✓" },
+                    { mod: "Interview", note: "AI phone interviews in 8 languages", launch: "OCT 2026", free: "—", s: "50/mo", g: "200/mo", sc: "1,000/mo" },
+                    { mod: "Onboard", note: "Day 1 documents + asset chain", launch: "JULY 2026", free: "—", s: "✓", g: "✓", sc: "✓" },
+                    { mod: "Pay", note: "Payroll + WPS for UAE", launch: "OCT 2026", free: "—", s: "—", g: "Limited", sc: "✓" },
+                    { mod: "Perform", note: "Reviews anchored to hire baseline", launch: "OCT 2026", free: "—", s: "—", g: "✓", sc: "✓" },
+                    { mod: "Retain", note: "Team health · Never individual scoring", launch: "OCT 2026", free: "—", s: "—", g: "✓", sc: "✓" },
+                  ].map((row, i) => (
+                    <tr key={row.mod} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#FAFAFA" }}>
+                      <td style={{ padding: "14px 18px", borderBottom: "1px solid #F3F4F6" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "#0D1117", marginBottom: 2 }}>{row.mod}</div>
+                        <div style={{ fontSize: 12, color: "#6B7280", marginBottom: 3 }}>{row.note}</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", color: row.launch === "JULY 2026" ? "#4F46E5" : "#9CA3AF" }}>○ {row.launch}</div>
+                      </td>
+                      <td style={{ padding: "14px 12px", textAlign: "center", color: row.free === "—" ? "#9CA3AF" : (row.free === "✓" ? "#059669" : "#374151"), fontWeight: row.free === "✓" ? 600 : 400, borderBottom: "1px solid #F3F4F6" }}>{row.free}</td>
+                      <td style={{ padding: "14px 12px", textAlign: "center", color: row.s === "—" ? "#9CA3AF" : (row.s === "✓" ? "#059669" : "#374151"), fontWeight: row.s === "✓" ? 600 : 400, borderBottom: "1px solid #F3F4F6" }}>{row.s}</td>
+                      <td style={{ padding: "14px 12px", textAlign: "center", color: row.g === "—" ? "#9CA3AF" : (row.g === "✓" ? "#059669" : "#4F46E5"), fontWeight: row.g === "✓" || row.g.includes("/mo") ? 600 : 400, borderBottom: "1px solid #F3F4F6" }}>{row.g}</td>
+                      <td style={{ padding: "14px 12px", textAlign: "center", color: row.sc === "—" ? "#9CA3AF" : (row.sc === "✓" ? "#059669" : "#374151"), fontWeight: row.sc === "✓" ? 600 : 400, borderBottom: "1px solid #F3F4F6" }}>{row.sc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p style={{ textAlign: "center", fontSize: 12, color: "#9CA3AF", marginTop: 18, lineHeight: 1.6 }}>
+            AI interview overage: ₹49 (Starter) · ₹39 (Growth) · ₹29 (Scale) per call beyond your monthly quota.<br />
+            Each interview is a 5-minute AI phone call in the candidate's preferred language. Cost-per-interview drops as your plan scales.
+          </p>
         </div>
       </section>
 
