@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Nav, Footer } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 
 type Industry = {
   id: string;
@@ -163,24 +164,17 @@ export default function VolumeHiringPage() {
       <Nav />
 
       {/* ────── HERO ────── */}
-      <section className="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950">
-        <div className="mx-auto max-w-7xl px-6 pt-20 pb-16 lg:px-8 lg:pt-28 lg:pb-20">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-200">
-              Solutions for high-volume hiring
-            </div>
-
-            <h1 className="mt-5 text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl">
-              Built for industries that hire at volume.
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 md:text-xl">
-              High volume. High stakes. High dropout rates. Zorvis is built for the hiring problems
-              other tools were never designed to address.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="VOLUME HIRING"
+        headline={
+          <>
+            Built for industries that{" "}
+            <span style={{ color: "#4F46E5" }}>hire at volume.</span>
+          </>
+        }
+        summary="BPO, retail, logistics, staffing agencies, manufacturing, hospitality. Six industries with the same pain. One platform built for them, with AI ranking, channel-native testing, and AI phone interviews."
+        suiteContext="Part of Zorvis - the people platform for India and UAE companies."
+      />
 
       {/* ────── INDUSTRY TABS ────── */}
       <section id="industry-tabs" className="bg-white">
