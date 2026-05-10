@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { ALL_POSTS, CATEGORIES } from "./posts";
 
 export default function BlogPage() {
@@ -15,14 +16,20 @@ export default function BlogPage() {
   return (
     <div style={{ fontFamily:"'DM Sans',system-ui,sans-serif", background:"#FFFFFF", color:"#0D1117", minHeight:"100vh" }}>
       <Nav />
-      <section style={{ padding:"110px 32px 56px", textAlign:"center", background:"linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>BLOG</Tag>
-        <h1 style={{ fontSize:"clamp(28px,5vw,48px)", fontWeight:800, letterSpacing:"-0.03em", margin:"0 0 14px" }}>
-          HR insights for India and UAE.<br /><span style={{ color:"#4F46E5" }}>No fluff, just practice.</span>
-        </h1>
-        <p style={{ fontSize:16, color:"#6B7280", maxWidth:480, margin:"0 auto 28px", lineHeight:1.6 }}>
-          CV screening, assessments, BPO hiring, UAE compliance, and AI-powered HR — written by practitioners for practitioners.
-        </p>
+      <PageHero
+        eyebrow="BLOG"
+        headline={
+          <>
+            HR insights for India and UAE.<br />
+            <span style={{ color:"#4F46E5" }}>No fluff, just practice.</span>
+          </>
+        }
+        summary="CV screening, assessments, BPO hiring, UAE compliance, and AI-powered HR — written by practitioners for practitioners."
+        suiteContext={`${ALL_POSTS.length}+ articles · Updated weekly`}
+      />
+
+      {/* Search input — out of hero, into a quiet strip */}
+      <section style={{ padding:"32px 32px 0", maxWidth:1040, margin:"0 auto", textAlign:"center" }}>
         <input
           value={q} onChange={e => setQ(e.target.value)}
           placeholder="Search articles..."
@@ -30,7 +37,7 @@ export default function BlogPage() {
         />
       </section>
 
-      <section style={{ padding:"0 32px 80px", maxWidth:1040, margin:"0 auto" }}>
+      <section style={{ padding:"32px 32px 80px", maxWidth:1040, margin:"0 auto" }}>
         <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:32 }}>
           {CATEGORIES.map(c => (
             <button key={c} onClick={() => setCat(c)}

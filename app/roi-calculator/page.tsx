@@ -4,7 +4,7 @@ import { Nav, Footer } from "@/components/Nav";
 import RoiCalculator from "../components/RoiCalculator";
 
 export const metadata = {
-  title: "ROI Calculator — Zorvis AI",
+  title: "ROI Calculator",
   description:
     "See how much your team could save on hiring with Zorvis. Live calculator with honest assumptions and no signup required.",
 };

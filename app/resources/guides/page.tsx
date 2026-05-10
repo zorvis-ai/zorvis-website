@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 
 const COMING = [
   { icon:"🎯", title:"The Complete BPO Hiring Playbook", phase:"Hiring Module", eta:"July 2026", color:"#4F46E5", desc:"Job post → AI screening → assessment → Kanban → signed offer. Built for Indian BPOs hiring 50–500 agents per month." },
@@ -15,22 +16,20 @@ export default function GuidesPage() {
   return (
     <div style={{ fontFamily:"'DM Sans',system-ui,sans-serif", background:"#FFFFFF", color:"#0D1117", minHeight:"100vh" }}>
       <Nav />
-      <section style={{ padding:"110px 32px 56px", textAlign:"center", background:"linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>GUIDES</Tag>
-        <h1 style={{ fontSize:"clamp(28px,5vw,48px)", fontWeight:800, letterSpacing:"-0.03em", margin:"0 0 14px", color:"#0D1117" }}>
-          Deep-dive product guides.<br /><span style={{ color:"#4F46E5" }}>Built as we build.</span>
-        </h1>
-        <p style={{ fontSize:16, color:"#6B7280", maxWidth:520, margin:"0 auto 28px", lineHeight:1.6 }}>
-          Each guide launches alongside its module. Phase 1 goes live July 2026 — the first two guides follow immediately.
-        </p>
-        <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#EEF2FF", border:"1px solid #C7D2FE", borderRadius:100, padding:"6px 16px" }}>
-          <div style={{ width:7, height:7, borderRadius:"50%", background:"#4F46E5", animation:"zpulse 2s infinite" }} />
-          <span style={{ fontSize:12, fontWeight:600, color:"#4F46E5" }}>Phase 1 launching July 2026</span>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="GUIDES"
+        headline={
+          <>
+            Deep-dive product guides.<br />
+            <span style={{ color:"#4F46E5" }}>Built as we build.</span>
+          </>
+        }
+        summary="Each guide launches alongside its module. Phase 1 goes live July 2026 — the first two guides follow immediately."
+        suiteContext="Step-by-step playbooks for hiring, compliance, and HR ops"
+      />
 
       {/* Available now */}
-      <section style={{ padding:"0 32px 56px", maxWidth:900, margin:"0 auto" }}>
+      <section style={{ padding:"56px 32px 56px", maxWidth:900, margin:"0 auto" }}>
         <h2 style={{ fontSize:16, fontWeight:700, color:"#0D1117", marginBottom:16 }}>Available now</h2>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:14 }}>
           {[

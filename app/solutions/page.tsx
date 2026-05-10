@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import Link from "next/link";
 
 const SOLUTIONS = [
@@ -44,22 +46,49 @@ const WHY_NOW = [
 ];
 
 export default function SolutionsPage() {
-  const [active, setActive] = useState("india");
+  return (
+    <Suspense fallback={null}>
+      <SolutionsPageInner />
+    </Suspense>
+  );
+}
+
+function SolutionsPageInner() {
+  const params = useSearchParams();
+  const initialMarket = params.get("market");
+  // Map ?market= values to internal tab IDs
+  const validIds = ["india", "uae", "agency"];
+  const startId = initialMarket && validIds.includes(initialMarket) ? initialMarket : "india";
+
+  const [active, setActive] = useState(startId);
+
+  // If user navigates and ?market= changes, sync the active tab
+  useEffect(() => {
+    if (initialMarket && validIds.includes(initialMarket) && initialMarket !== active) {
+      setActive(initialMarket);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialMarket]);
+
   const cur = SOLUTIONS.find(s => s.id === active)!;
 
   return (
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      <section style={{ padding: "120px 32px 56px", textAlign: "center", maxWidth: 760, margin: "0 auto", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>SOLUTIONS</Tag>
-        <h1 style={{ fontSize: "clamp(32px,6vw,58px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px", color: "#0D1117" }}>
-          Built for your market.<br /><span style={{ color: "#4F46E5" }}>Your context. Your compliance.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>India SME, UAE blue collar, GCC compliance, staffing agencies. One platform — configured for your exact reality.</p>
-      </section>
+      <PageHero
+        eyebrow="SOLUTIONS"
+        headline={
+          <>
+            Built for your market.<br />
+            <span style={{ color: "#4F46E5" }}>Your context. Your compliance.</span>
+          </>
+        }
+        summary="India SME, UAE blue collar, GCC compliance, staffing agencies. One platform — configured for your exact reality."
+        suiteContext="Three configurations. Same data spine. Same intelligence engine."
+      />
 
-      <section style={{ padding: "0 32px 88px", maxWidth: 1060, margin: "0 auto" }}>
+      <section style={{ padding: "56px 32px 88px", maxWidth: 1060, margin: "0 auto" }}>
         {/* Tabs */}
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 44, flexWrap: "wrap" }}>
           {SOLUTIONS.map(s => (

@@ -1,5 +1,6 @@
 "use client";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { TEAM } from "@/components/brand";
 import Link from "next/link";
 
@@ -7,7 +8,7 @@ const STATS = [
   { n: "50–500",  l: "employees — the SME ignored by enterprise vendors" },
   { n: "₹40L",   l: "What enterprise HR tools cost per year" },
   { n: "2",       l: "Markets at launch — India and UAE" },
-  { n: "3 min",   l: "to rank 400 CVs. Was 6 hours." },
+  { n: "3 min",   l: "to rank 400 CVs (vs ~6 hours manually)" },
 ];
 
 const TIMELINE = [
@@ -31,19 +32,19 @@ export default function AboutPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      <section style={{ padding: "120px 32px 72px", maxWidth: 760, margin: "0 auto", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>OUR STORY</Tag>
-        <h1 style={{ fontSize: "clamp(32px,6vw,58px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.08, margin: "0 0 22px", color: "#0D1117" }}>
-          India's best companies<br /><span style={{ color: "#4F46E5" }}>deserve better tools.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.75, maxWidth: 600, margin: "0 auto" }}>
-          Zorvis started with a simple observation: enterprise HR infrastructure works beautifully for the 10,000-person company. It does nothing for the 200-person BPO in Hyderabad — the company that drives most of India's employment, hires in volume every month, and has been completely ignored by every major vendor.
-          <br /><br />
-          We built Zorvis to close that gap. People Intelligence Platform capability at SME pricing. Starting free.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="OUR STORY"
+        headline={
+          <>
+            India and UAE companies<br />
+            <span style={{ color: "#4F46E5" }}>deserve better tools.</span>
+          </>
+        }
+        summary="Zorvis started with a simple observation: enterprise HR infrastructure works beautifully for the 10,000-person company. It does nothing for the 200-person BPO in Hyderabad — the company that drives most of India's employment, hires in volume every month, and has been ignored by every major vendor. We built Zorvis to close that gap. People Intelligence Platform capability at SME pricing. Starting free."
+        suiteContext="Founded 2024 · Building from India + UAE"
+      />
 
-      <section style={{ padding: "0 32px 80px", background: "#FFFFFF" }}>
+      <section style={{ padding: "56px 32px 80px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 14 }}>
           {STATS.map(s => (
             <div key={s.n} style={{ background: "#F7F8FC", border: "1px solid #E2E6F0", borderRadius: 12, padding: "24px 20px", textAlign: "center" }}>

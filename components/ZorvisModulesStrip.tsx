@@ -72,8 +72,14 @@ const MODULES: Module[] = [
 
 export default function ZorvisModulesStrip({
   variant = "default",
+  followsDarkHero = false,
 }: {
   variant?: "default" | "compact";
+  /**
+   * Set to true when this strip sits directly under PageHero variant="dark".
+   * Adds a fade-in transition so the strip doesn't look disconnected from the dark hero.
+   */
+  followsDarkHero?: boolean;
 }) {
   const [activeModule, setActiveModule] = useState<string | null>(null);
 
@@ -81,9 +87,13 @@ export default function ZorvisModulesStrip({
     <div
       style={{
         background: "#FAFAFA",
-        borderTop: "1px solid #E5E5EA",
+        borderTop: followsDarkHero ? "none" : "1px solid #E5E5EA",
         borderBottom: "1px solid #E5E5EA",
         padding: variant === "compact" ? "20px 24px" : "32px 24px",
+        // Subtle gradient on top edge if following a dark hero — softens the transition
+        backgroundImage: followsDarkHero
+          ? "linear-gradient(180deg, rgba(13,17,23,0.08) 0%, rgba(13,17,23,0) 24px), linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 100%)"
+          : undefined,
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
@@ -149,7 +159,6 @@ export default function ZorvisModulesStrip({
                   boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.06)" : "none",
                 }}
               >
-                {/* Icon */}
                 <div
                   style={{
                     display: "inline-flex",
@@ -166,7 +175,6 @@ export default function ZorvisModulesStrip({
                   <mod.icon style={{ width: 18, height: 18 }} />
                 </div>
 
-                {/* Name */}
                 <div
                   style={{
                     fontSize: 13,
@@ -178,7 +186,6 @@ export default function ZorvisModulesStrip({
                   {mod.name}
                 </div>
 
-                {/* Outcome */}
                 <div
                   style={{
                     fontSize: 11,
@@ -190,7 +197,6 @@ export default function ZorvisModulesStrip({
                   {mod.outcome}
                 </div>
 
-                {/* Launch date indicator */}
                 <div
                   style={{
                     fontSize: 9,
@@ -203,7 +209,6 @@ export default function ZorvisModulesStrip({
                   {isJuly ? "○ JULY 2026" : "○ OCT 2026"}
                 </div>
 
-                {/* Tooltip on hover */}
                 {isActive && (
                   <div
                     style={{

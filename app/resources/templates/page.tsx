@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { ALL_TEMPLATES, TEMPLATE_CATEGORIES } from "./data";
 
 const FORMAT_COLOR: Record<string, string> = {
@@ -53,15 +54,19 @@ export default function TemplatesPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      {/* HERO */}
-      <section style={{ padding: "110px 32px 56px", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>TEMPLATES</Tag>
-        <h1 style={{ fontSize: "clamp(28px,5vw,50px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px", color: "#0D1117" }}>
-          Free HR templates.<br /><span style={{ color: "#4F46E5" }}>Ready to use today.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 500, margin: "0 auto 28px", lineHeight: 1.6 }}>
-          Offer letters, JDs, interview scorecards, onboarding checklists, and compliance templates. All free. No signup to browse.
-        </p>
+      <PageHero
+        eyebrow="HR TEMPLATES"
+        headline={
+          <>
+            Free HR templates.<br />
+            <span style={{ color: "#4F46E5" }}>Ready to use today.</span>
+          </>
+        }
+        summary="Offer letters, JDs, interview scorecards, onboarding checklists, and compliance templates. All free. No signup to browse."
+        suiteContext={`${ALL_TEMPLATES.length} templates · India + UAE-ready`}
+      />
+
+      <section style={{ padding: "32px 32px 0", maxWidth: 1040, margin: "0 auto", textAlign: "center" }}>
         <input
           value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search templates (e.g. offer letter, BPO scorecard, onboarding...)"
@@ -72,7 +77,7 @@ export default function TemplatesPage() {
       </section>
 
       {/* CATEGORY FILTERS */}
-      <section style={{ padding: "0 32px 20px", maxWidth: 1040, margin: "0 auto" }}>
+      <section style={{ padding: "32px 32px 20px", maxWidth: 1040, margin: "0 auto" }}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {TEMPLATE_CATEGORIES.map(c => (
             <button key={c} onClick={() => setCat(c)}

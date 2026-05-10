@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 
 const JOBS = [
   {
@@ -162,18 +163,17 @@ export default function CareersPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      <section style={{ padding: "110px 32px 64px", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>CAREERS</Tag>
-        <h1 style={{ fontSize: "clamp(28px,5vw,52px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 16px" }}>
-          Build the future of<br /><span style={{ color: "#4F46E5" }}>people operations in India.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 520, margin: "0 auto 28px", lineHeight: 1.7 }}>
-          Zorvis AI is an AI-powered HR platform for Indian and UAE SMEs. Early stage, well-scoped, hiring the founding engineering team.
-        </p>
-        <div style={{ display: "flex", justifyContent: "center", gap: 20, flexWrap: "wrap", fontSize: 13, color: "#6B7280" }}>
-          <span>📍 NCR, India</span><span>⚡ Early-stage startup</span><span>🇮🇳 India + UAE</span><span>💡 AI · HR · Compliance</span>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="CAREERS"
+        headline={
+          <>
+            Build the future of<br />
+            <span style={{ color: "#4F46E5" }}>people operations in India.</span>
+          </>
+        }
+        summary="Zorvis AI is an AI-powered HR platform for Indian and UAE SMEs. Early stage, well-scoped, hiring the founding engineering team."
+        suiteContext="📍 NCR, India · ⚡ Early-stage startup · 🇮🇳 India + UAE"
+      />
 
       {!selectedJob && (
         <section style={{ padding: "0 32px 80px", maxWidth: 860, margin: "0 auto" }}>
