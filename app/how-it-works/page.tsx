@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import {
   FileText,
   Brain,
@@ -186,68 +187,47 @@ export default function HowItWorksPage() {
       <Nav />
 
       {/* HERO */}
-      <section style={{
-        padding: "120px 32px 70px",
-        background: "linear-gradient(180deg,#0D1117 0%,#1A1F2E 100%)",
-        textAlign: "center", color: "#FFFFFF",
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* Background gradient orb */}
-        <div style={{
-          position: "absolute", top: "10%", left: "50%",
-          transform: "translateX(-50%)",
-          width: 700, height: 700,
-          background: "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <Tag color="#A78BFA">HOW ZORVIS WORKS</Tag>
-          <h1 style={{
-            fontSize: "clamp(34px, 6vw, 60px)", fontWeight: 800,
-            letterSpacing: "-0.03em", lineHeight: 1.05, margin: "0 0 22px",
-            color: "#FFFFFF",
-          }}>
-            Hire to retire.<br />
+      <PageHero
+        variant="dark"
+        eyebrow="HOW ZORVIS WORKS"
+        headline={
+          <>
+            From first CV to{" "}
             <span style={{
               background: "linear-gradient(90deg,#A78BFA 0%,#7C3AED 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-            }}>One AI system.</span>
-          </h1>
-          <p style={{
-            fontSize: 17, color: "#9CA3AF", lineHeight: 1.65,
-            maxWidth: 600, margin: "0 auto 28px",
-          }}>
-            From the first CV to final payslip, Zorvis runs the entire flow on one platform.
-            Every step feeds the next. Every hire makes the system smarter.
-          </p>
+            }}>strongest hire.</span>
+          </>
+        }
+        summary="Zorvis runs the full hiring flow on one platform - posting, ranking, AI phone interviews, assessments on the preferred channel, scheduled interviews, offers, and onboarding. Every step feeds the next."
+        suiteContext="Part of Zorvis - the people platform for India and UAE companies."
+      />
 
-          {/* Stat strip */}
-          <div style={{
-            display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 28,
-            marginTop: 36,
-          }}>
-            {[
-              { stat: "3 min", label: "to rank 1,000 CVs" },
-              { stat: "60s", label: "to send tests to top 100" },
-              { stat: "1 day", label: "to first interview" },
-              { stat: "6 days", label: "candidate to employee" },
-            ].map((s) => (
-              <div key={s.label} style={{ textAlign: "center" }}>
-                <div style={{
-                  fontSize: 28, fontWeight: 800,
-                  background: "linear-gradient(90deg,#A78BFA 0%,#7C3AED 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  letterSpacing: "-0.02em",
-                }}>{s.stat}</div>
-                <div style={{ fontSize: 12, color: "#6B7280", marginTop: 4 }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
+      <section style={{ padding: "32px 24px 24px", background: "#0D1117", color: "#FFFFFF" }}>
+        <div style={{
+          display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 28,
+          maxWidth: 800, margin: "0 auto",
+        }}>
+          {[
+            { stat: "3 min", label: "to rank 1,000 CVs" },
+            { stat: "5 min", label: "AI phone interview" },
+            { stat: "1 day", label: "to first interview" },
+            { stat: "6 days", label: "candidate to employee" },
+          ].map((s) => (
+            <div key={s.label} style={{ textAlign: "center" }}>
+              <div style={{
+                fontSize: 28, fontWeight: 800,
+                background: "linear-gradient(90deg,#A78BFA 0%,#7C3AED 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                letterSpacing: "-0.02em",
+              }}>{s.stat}</div>
+              <div style={{ fontSize: 12, color: "#6B7280", marginTop: 4 }}>{s.label}</div>
+            </div>
+          ))}
         </div>
       </section>
 

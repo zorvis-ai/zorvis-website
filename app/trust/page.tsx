@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import {
   Shield,
   Lock,
@@ -90,39 +91,29 @@ export default function TrustPage() {
       <Nav />
 
       {/* HERO */}
-      <section style={{
-        padding: "120px 32px 60px",
-        background: "linear-gradient(180deg,#0D1117 0%,#1A1F2E 100%)",
-        textAlign: "center", color: "#FFFFFF",
-      }}>
-        <Tag color="#A78BFA">TRUST &amp; SECURITY</Tag>
-        <h1 style={{
-          fontSize: "clamp(32px, 6vw, 58px)", fontWeight: 800,
-          letterSpacing: "-0.03em", lineHeight: 1.05, margin: "0 0 22px",
-          color: "#FFFFFF",
-        }}>
-          AI ranks.<br/>
-          <span style={{
-            background: "linear-gradient(90deg,#A78BFA 0%,#7C3AED 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>Humans decide.</span><br/>
-          Always.
-        </h1>
-        <p style={{
-          fontSize: 17, color: "#9CA3AF", lineHeight: 1.65,
-          maxWidth: 620, margin: "0 auto",
-        }}>
-          Trust is the product. Every AI output at Zorvis has a plain-language explanation,
-          a confidence band, and a contestability path for the person it describes.
-          These are not aspirations — they are non-negotiable product requirements.
-        </p>
+      <PageHero
+        variant="dark"
+        eyebrow="TRUST & SECURITY"
+        headline={
+          <>
+            AI ranks.{" "}
+            <span style={{
+              background: "linear-gradient(90deg,#A78BFA 0%,#7C3AED 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>Humans decide.</span>{" "}
+            Always.
+          </>
+        }
+        summary="Trust is the product. Every AI output at Zorvis has a plain-language explanation, a confidence band, and a contestability path for the person it describes. These are non-negotiable product requirements, not aspirations."
+        suiteContext="Part of Zorvis - the people platform for India and UAE companies."
+      />
 
-        {/* Quick badge row */}
+      <section style={{ padding: "24px 24px 16px", background: "#0D1117" }}>
         <div style={{
           display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10,
-          marginTop: 36, maxWidth: 720, marginInline: "auto",
+          maxWidth: 720, margin: "0 auto",
         }}>
           {[
             { label: "DPDP Act 2023" },

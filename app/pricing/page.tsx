@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { PRICING } from "@/components/brand";
 import Link from "next/link";
 import RoiCalculator from "../components/RoiCalculator";
@@ -72,15 +73,20 @@ export default function PricingPage() {
       <Nav />
 
       {/* HERO */}
-      <section style={{ padding: "120px 32px 60px", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>PRICING</Tag>
-        <h1 style={{ fontSize: "clamp(30px,5vw,54px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 12px", color: "#0D1117" }}>
-          Start free.<br /><span style={{ color: "#4F46E5" }}>Pay when it works.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 32, maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.6 }}>
-          Free tier is permanent. No trial clock. No credit card. Upgrade when you're ready.
-        </p>
-        {/* Market toggle */}
+      <PageHero
+        eyebrow="PRICING"
+        headline={
+          <>
+            Start free.{" "}
+            <span style={{ color: "#4F46E5" }}>Pay when it works.</span>
+          </>
+        }
+        summary="Free tier is permanent. No trial clock. No credit card. Every paid plan includes AI hiring, onboarding, and a quota of AI phone interviews."
+        suiteContext="Part of Zorvis - the people platform for India and UAE companies."
+      />
+
+      {/* Market toggle - kept as its own section */}
+      <section style={{ padding: "32px 24px 8px", background: "#FFFFFF", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#F7F8FC", border: "1px solid #E2E6F0", borderRadius: 100, padding: 4 }}>
           {(["india", "uae"] as const).map(m => (
             <button key={m} onClick={() => setMarket(m)} style={{
@@ -90,7 +96,7 @@ export default function PricingPage() {
               fontSize: 13, fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans',sans-serif", transition: "all 0.15s",
             }}>
-              {m === "india" ? "🇮🇳 India (₹)" : "🇦🇪 UAE (AED)"}
+              {m === "india" ? "\u{1F1EE}\u{1F1F3} India (\u20B9)" : "\u{1F1E6}\u{1F1EA} UAE (AED)"}
             </button>
           ))}
         </div>

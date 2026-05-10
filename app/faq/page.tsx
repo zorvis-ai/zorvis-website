@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { Search, ChevronDown, Shield, Brain, Globe, Users, FileText, Lock, ArrowRight } from "lucide-react";
 
 type FaqCategory = "all" | "data" | "scoring" | "compliance" | "product" | "pricing";
@@ -267,29 +268,21 @@ export default function FaqPage() {
       <Nav />
 
       {/* HERO */}
-      <section style={{
-        padding: "120px 32px 60px",
-        background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)",
-        textAlign: "center",
-      }}>
-        <Tag>FREQUENTLY ASKED QUESTIONS</Tag>
-        <h1 style={{
-          fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 800,
-          letterSpacing: "-0.03em", lineHeight: 1.08, margin: "0 0 18px",
-          color: "#0D1117",
-        }}>
-          The questions everyone asks.<br/>
-          <span style={{ color: "#4F46E5" }}>Honest answers.</span>
-        </h1>
-        <p style={{
-          fontSize: 16, color: "#6B7280", lineHeight: 1.6,
-          maxWidth: 580, margin: "0 auto",
-        }}>
-          Real questions from real customers and prospects. No marketing fluff. If you don't see your question answered, email us — we'll add it.
-        </p>
+      <PageHero
+        eyebrow="FREQUENTLY ASKED QUESTIONS"
+        headline={
+          <>
+            The questions everyone asks.{" "}
+            <span style={{ color: "#4F46E5" }}>Honest answers.</span>
+          </>
+        }
+        summary="Real questions from prospects across BPO, retail, and staffing. No marketing fluff. If you don't see your question answered, email us - we'll add it."
+        suiteContext="Part of Zorvis - the people platform for India and UAE companies."
+      />
 
-        {/* Search */}
-        <div style={{ maxWidth: 480, margin: "32px auto 0", position: "relative" }}>
+      {/* Search - kept as its own section right after the hero */}
+      <section style={{ padding: "24px 24px 8px", background: "#FFFFFF" }}>
+        <div style={{ maxWidth: 480, margin: "0 auto", position: "relative" }}>
           <Search style={{
             position: "absolute", left: 16, top: "50%",
             transform: "translateY(-50%)", color: "#9CA3AF",
@@ -299,7 +292,7 @@ export default function FaqPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search questions, e.g. 'data', 'WhatsApp', 'pricing'…"
+            placeholder="Search questions, e.g. 'data', 'preferred channel', 'pricing'..."
             style={{
               width: "100%", padding: "14px 16px 14px 46px",
               fontSize: 14, fontFamily: "'DM Sans',sans-serif",
