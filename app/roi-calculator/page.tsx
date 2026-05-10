@@ -1,4 +1,4 @@
-head -60 ~/Documents/Zorvis/website/app/solutions/volume-hiring/page.tsximport Link from "next/link";
+import Link from "next/link";
 import { ArrowRight, TrendingUp, Calculator, Shield } from "lucide-react";
 import { Nav, Footer } from "@/components/Nav";
 import RoiCalculator from "../components/RoiCalculator";
