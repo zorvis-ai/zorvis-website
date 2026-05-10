@@ -86,17 +86,17 @@ const STAGES: Stage[] = [
     id: "test",
     num: "03",
     icon: MessageSquare,
-    title: "Aptitude tests on WhatsApp",
+    title: "Aptitude tests on the preferred channel",
     duration: "Under 60 seconds to send",
-    hook: "Bulk-send tests to your top candidates. Delivered on the channel they actually use. No app downloads, no logins, no friction.",
+    hook: "Bulk-send tests to your top candidates. Delivered on the channel they actually use — email, WhatsApp, SMS, or web portal. No app downloads, no logins, no friction.",
     bullets: [
       {
         label: "500-question bank per category",
         detail: "Numerical, Verbal, Logical, Domain-specific. Configurable by role — blue-collar tests differ from white-collar.",
       },
       {
-        label: "WhatsApp-first delivery",
-        detail: "Email default, WhatsApp available, SMS fallback. 3-second test load on 4G anywhere in the world.",
+        label: "Channel-native delivery",
+        detail: "Email default, WhatsApp available, SMS fallback, web portal always on. 3-second test load on 4G anywhere in the world.",
       },
       {
         label: "Anti-cheat with consent (P4)",
@@ -126,7 +126,7 @@ const STAGES: Stage[] = [
         detail: "3-second consent disclosure before call connects. 30-day retention then auto-deletion. Candidate can request transcript and dispute scoring. AI never makes the final hire decision — only ranks.",
       },
     ],
-    techNote: "Beta launching October 2026. Built on managed voice agent stack with Whisper transcription and Groq LLM for live scoring. Included in every paid plan: 50/200/1,000 calls per month on Starter/Growth/Scale.",
+    techNote: "Beta launching October 2026. Built on managed voice agent stack with Whisper transcription and Groq LLM for live scoring. Included in every plan: 0/50/200/1,000 calls per month on Free/Starter/Growth/Scale.",
   },
   {
     id: "interview",
@@ -142,7 +142,7 @@ const STAGES: Stage[] = [
       },
       {
         label: "Channel-native scheduling",
-        detail: "Google Calendar + Outlook OAuth. Candidate picks slot via WhatsApp link. 24h + 1h auto-reminders. No-show tracking.",
+        detail: "Google Calendar + Outlook OAuth. Candidate picks slot via their preferred channel link. 24h + 1h auto-reminders. No-show tracking.",
       },
       {
         label: "Embedded video interviews",
@@ -157,7 +157,7 @@ const STAGES: Stage[] = [
     icon: FileSignature,
     title: "Send offers, get them signed",
     duration: "Same-day acceptance",
-    hook: "AI fills offer letters with candidate details — except salary, which is always entered manually. Sent on WhatsApp + email. Digitally signed on mobile.",
+    hook: "AI fills offer letters with candidate details — except salary, which is always entered manually. Sent on the candidate's preferred channel. Digitally signed on mobile.",
     bullets: [
       {
         label: "India + UAE templates",
@@ -180,15 +180,15 @@ const STAGES: Stage[] = [
     icon: UserCheck,
     title: "Onboard from candidate to employee",
     duration: "Day 1 to active in hours",
-    hook: "BGV clears, candidate becomes employee. Documents collected via WhatsApp. Day 1 chain auto-runs. No manual data entry.",
+    hook: "BGV clears, candidate becomes employee. Documents collected via the preferred channel. Day 1 chain auto-runs. No manual data entry.",
     bullets: [
       {
         label: "Zero re-entry",
         detail: "Joining date, role, salary, department, manager, documents — all pre-filled from hiring data. Candidate becomes employee in one state machine.",
       },
       {
-        label: "Document collection on WhatsApp",
-        detail: "Aadhaar, PAN, payslips (India). Emirates ID, residence visa, labour card (UAE). AI pre-checks each photo for legibility.",
+        label: "Document collection on the preferred channel",
+        detail: "Aadhaar, PAN, payslips (India). Emirates ID, residence visa, labour card (UAE). AI pre-checks each photo for legibility. Channel matches the candidate's choice from hiring.",
       },
       {
         label: "Day 1 onboarding chain",

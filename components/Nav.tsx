@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV } from "./brand";
+import { NAV, NAV_GROUPS } from "./brand";
 
 export function ZMark({ size = 28, dark = false }: { size?: number; dark?: boolean }) {
   const sw = size * 0.19, pad = sw / 2 + 1;
@@ -22,9 +22,115 @@ export function ZMark({ size = 28, dark = false }: { size?: number; dark?: boole
   );
 }
 
+// ─── Desktop dropdown menu item ──────────────────────────────────────────────
+function NavDropdown({
+  group,
+  isActive,
+  openId,
+  setOpenId,
+}: {
+  group: typeof NAV_GROUPS[0];
+  isActive: boolean;
+  openId: string | null;
+  setOpenId: (id: string | null) => void;
+}) {
+  const isOpen = openId === group.label;
+  const ref = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Hover open with small delay to prevent flicker
+  const handleEnter = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpenId(group.label);
+  };
+  const handleLeave = () => {
+    closeTimer.current = setTimeout(() => setOpenId(null), 120);
+  };
+
+  // No children → render as plain link
+  if (!group.children) {
+    return (
+      <Link href={group.href} style={{
+        fontSize: 13, fontWeight: 500,
+        color: isActive ? "#4F46E5" : "#374151",
+        textDecoration: "none", padding: "6px 12px", borderRadius: 6,
+        background: isActive ? "#EEF2FF" : "transparent",
+        transition: "all 0.15s",
+      }}
+        onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "#F7F8FC"; }}
+        onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
+      >{group.label}</Link>
+    );
+  }
+
+  return (
+    <div
+      ref={ref}
+      style={{ position: "relative" }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <button
+        onClick={() => setOpenId(isOpen ? null : group.label)}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 4,
+          fontSize: 13, fontWeight: 500,
+          color: isActive ? "#4F46E5" : "#374151",
+          background: isActive || isOpen ? "#EEF2FF" : "transparent",
+          border: "none", padding: "6px 10px 6px 12px", borderRadius: 6,
+          cursor: "pointer", fontFamily: "'DM Sans',sans-serif",
+          transition: "all 0.15s",
+        }}
+      >
+        {group.label}
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.15s" }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0,
+          background: "#FFFFFF", border: "1px solid #E2E6F0", borderRadius: 12,
+          boxShadow: "0 12px 32px rgba(0,0,0,0.10)",
+          padding: 8, minWidth: 280,
+          zIndex: 200,
+        }}>
+          {group.children.map((child, i) => {
+            // Separator
+            if (child.label === "—") {
+              return <div key={`sep-${i}`} style={{ height: 1, background: "#E2E6F0", margin: "6px 8px" }} />;
+            }
+            return (
+              <Link
+                key={child.href ?? child.label}
+                href={child.href!}
+                style={{
+                  display: "block",
+                  padding: child.desc ? "9px 12px" : "8px 12px",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  transition: "background 0.1s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = "#F7F8FC")}
+                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                onClick={() => setOpenId(null)}
+              >
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#0D1117", marginBottom: child.desc ? 2 : 0 }}>{child.label}</div>
+                {child.desc && <div style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.4 }}>{child.desc}</div>}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -34,14 +140,28 @@ export function Nav() {
   }, []);
 
   // Close menu on route change
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => { setMenuOpen(false); setOpenId(null); }, [pathname]);
+
+  // Close dropdown on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpenId(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Determine which top-level group is "active" based on current pathname
+  const isGroupActive = (group: typeof NAV_GROUPS[0]) => {
+    if (pathname === group.href) return true;
+    if (!group.children) return false;
+    return group.children.some(c => c.href && pathname === c.href.split("?")[0]);
+  };
 
   return (
     <>
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
         background: "#FFFFFF",
-        borderBottom: `1px solid ${scrolled ? "#E2E6F0" : "#E2E6F0"}`,
+        borderBottom: "1px solid #E2E6F0",
         boxShadow: scrolled ? "0 1px 12px rgba(0,0,0,0.06)" : "none",
         transition: "box-shadow 0.2s",
         padding: "0 24px", height: 60,
@@ -56,17 +176,14 @@ export function Nav() {
 
         {/* Desktop nav */}
         <div style={{ display: "flex", gap: 4, alignItems: "center" }} className="zv-desktop-nav">
-          {NAV.map(l => (
-            <Link key={l.href} href={l.href} style={{
-              fontSize: 13, fontWeight: 500,
-              color: pathname === l.href ? "#4F46E5" : "#374151",
-              textDecoration: "none", padding: "6px 12px", borderRadius: 6,
-              background: pathname === l.href ? "#EEF2FF" : "transparent",
-              transition: "all 0.15s",
-            }}
-              onMouseEnter={e => { if (pathname !== l.href) (e.currentTarget as HTMLAnchorElement).style.background = "#F7F8FC"; }}
-              onMouseLeave={e => { if (pathname !== l.href) (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
-            >{l.label}</Link>
+          {NAV_GROUPS.map(group => (
+            <NavDropdown
+              key={group.label}
+              group={group}
+              isActive={isGroupActive(group)}
+              openId={openId}
+              setOpenId={setOpenId}
+            />
           ))}
         </div>
 
@@ -103,7 +220,7 @@ export function Nav() {
         </button>
       </nav>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown menu — flat list, no sub-dropdowns */}
       {menuOpen && (
         <div className="zv-mobile-menu" style={{
           position: "fixed", top: 60, left: 0, right: 0, zIndex: 99,
@@ -111,7 +228,9 @@ export function Nav() {
           boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           padding: "12px 16px 20px",
           fontFamily: "'DM Sans', sans-serif",
+          maxHeight: "calc(100vh - 60px)", overflowY: "auto",
         }}>
+          {/* Top-level pages */}
           {NAV.map(l => (
             <Link key={l.href} href={l.href} style={{
               display: "block", padding: "11px 12px", fontSize: 15, fontWeight: 500,
@@ -123,6 +242,24 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+
+          {/* Quick links section */}
+          <div style={{ borderTop: "1px solid #E2E6F0", marginTop: 10, paddingTop: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: "#9CA3AF", letterSpacing: "0.1em", padding: "0 12px", marginBottom: 6 }}>QUICK LINKS</div>
+            {[
+              ["How it works", "/how-it-works"],
+              ["Use cases", "/use-cases"],
+              ["FAQ", "/faq"],
+              ["ROI Calculator", "/roi-calculator"],
+              ["Customers", "/customers"],
+            ].map(([label, href]) => (
+              <Link key={href} href={href} style={{
+                display: "block", padding: "9px 12px", fontSize: 14, fontWeight: 400,
+                color: "#374151", textDecoration: "none", borderRadius: 6,
+              }}>{label}</Link>
+            ))}
+          </div>
+
           <div style={{ borderTop: "1px solid #E2E6F0", marginTop: 12, paddingTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
             <Link href="/login" style={{ display: "block", padding: "11px 12px", fontSize: 15, fontWeight: 500, color: "#374151", textDecoration: "none", borderRadius: 8 }}>Sign in</Link>
             <Link href="/waitlist" style={{ display: "block", padding: "12px 16px", fontSize: 15, fontWeight: 600, color: "#FFFFFF", textDecoration: "none", borderRadius: 8, background: "#4F46E5", textAlign: "center" }}>Get early access</Link>
@@ -132,11 +269,11 @@ export function Nav() {
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
-        @media (max-width: 768px) {
+        @media (max-width: 880px) {
           .zv-desktop-nav { display: none !important; }
           .zv-mobile-menu-btn { display: flex !important; }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 881px) {
           .zv-mobile-menu { display: none !important; }
         }
       `}</style>
@@ -145,34 +282,36 @@ export function Nav() {
 }
 
 export function Footer() {
-  // Footer columns — links to pages that exist OR are coming today (batch 2B-2D)
   const COLS = [
     {
-      heading: "PRODUCT",
+      heading: "PLATFORM",
       links: [
-        ["Platform", "/product"],
-        ["Pricing", "/pricing"],
+        ["Overview", "/product"],
+        ["How it works", "/how-it-works"],
         ["Use Cases", "/use-cases"],
-        ["ROI Calculator", "/roi-calculator"],
+        ["AI Interview", "/waitlist?interest=ai-interview"],
+        ["Pricing", "/pricing"],
       ],
     },
     {
       heading: "SOLUTIONS",
       links: [
-        ["High-volume hiring", "/solutions/volume-hiring"],
-        ["BPO & Contact Centres", "/solutions/volume-hiring#bpo"],
-        ["Staffing Agencies", "/solutions/volume-hiring#staffing"],
-        ["Manufacturing", "/solutions/volume-hiring#manufacturing"],
-        ["Retail & QSR", "/solutions/volume-hiring#retail"],
+        ["India SME", "/solutions?market=india"],
+        ["UAE & GCC", "/solutions?market=uae"],
+        ["Staffing Agencies", "/solutions?market=agency"],
+        ["BPO & Contact Centres", "/solutions/volume-hiring?industry=bpo"],
+        ["Manufacturing", "/solutions/volume-hiring?industry=manufacturing"],
+        ["Retail & QSR", "/solutions/volume-hiring?industry=retail"],
       ],
     },
     {
       heading: "RESOURCES",
       links: [
-        ["How it works", "/how-it-works"],
-        ["HR Templates", "/resources/templates"],
         ["Blog", "/resources/blog"],
+        ["HR Templates", "/resources/templates"],
+        ["Guides", "/resources/guides"],
         ["FAQ", "/faq"],
+        ["ROI Calculator", "/roi-calculator"],
         ["Trust & Security", "/trust"],
       ],
     },
@@ -188,7 +327,6 @@ export function Footer() {
     },
   ];
 
-  // Trust badges row
   const TRUST = [
     { label: "DPDP Act 2023", status: "live" },
     { label: "UAE PDPL Ready", status: "live" },
@@ -204,13 +342,11 @@ export function Footer() {
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        {/* Top section: Brand + 4 columns */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "minmax(220px, 1fr) repeat(4, minmax(140px, 1fr))",
           gap: 32, marginBottom: 40,
         }} className="zv-footer-grid">
-          {/* Brand column */}
           <div>
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 14 }}>
               <ZMark size={24} dark/>
@@ -219,7 +355,6 @@ export function Footer() {
             <p style={{ fontSize: 13, color: "#6B7280", maxWidth: 240, lineHeight: 1.6, marginBottom: 16 }}>
               People Intelligence Platform for India and UAE SMEs. Hire, manage, and grow your team — powered by AI.
             </p>
-            {/* Region indicator */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#6B7280" }}>
               <span style={{ fontSize: 14 }}>🇮🇳</span>
               <span>India</span>
@@ -229,7 +364,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* 4 link columns */}
           {COLS.map(col => (
             <div key={col.heading}>
               <div style={{
@@ -253,7 +387,6 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Trust badges row */}
         <div style={{
           borderTop: "1px solid #1F2937",
           padding: "24px 0",
@@ -281,7 +414,6 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom row: copyright + legal + social */}
         <div style={{
           borderTop: "1px solid #1F2937",
           paddingTop: 20,
@@ -292,15 +424,12 @@ export function Footer() {
             © 2026 Zorvis AI Technologies Pvt Ltd · Built for emerging markets
           </span>
 
-          {/* Social + legal */}
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {/* Legal links */}
             <div style={{ display: "flex", gap: 16 }}>
               <Link href="/privacy" style={{ fontSize: 12, color: "#4B5563", textDecoration: "none" }}>Privacy</Link>
               <Link href="/terms" style={{ fontSize: 12, color: "#4B5563", textDecoration: "none" }}>Terms</Link>
             </div>
 
-            {/* Social icons */}
             <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
               <a
                 href="https://www.linkedin.com/company/zorvis-ai"
@@ -345,7 +474,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Responsive: stack columns on mobile */}
       <style>{`
         @media (max-width: 900px) {
           .zv-footer-grid {

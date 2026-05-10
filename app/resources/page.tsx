@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { ALL_POSTS, CATEGORIES } from "./blog/posts";
 
 const RECENT = ALL_POSTS.slice(0, 6);
@@ -40,19 +41,20 @@ export default function ResourcesPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      {/* HERO */}
-      <section style={{ padding: "110px 32px 60px", textAlign: "center", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>RESOURCES</Tag>
-        <h1 style={{ fontSize: "clamp(28px,5vw,50px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px", color: "#0D1117" }}>
-          Hire smarter.<br /><span style={{ color: "#4F46E5" }}>Everything you need to know.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 500, margin: "0 auto", lineHeight: 1.6 }}>
-          Free guides, blog articles, and templates for HR managers and founders in India and the UAE. No signup needed.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="RESOURCES"
+        headline={
+          <>
+            Hire smarter.<br />
+            <span style={{ color: "#4F46E5" }}>Everything you need to know.</span>
+          </>
+        }
+        summary="Free guides, blog articles, and templates for HR managers and founders in India and the UAE. No signup needed."
+        suiteContext="Updated regularly. Built from the same playbook as Zorvis itself."
+      />
 
       {/* RESOURCE HUBS */}
-      <section style={{ padding: "0 32px 64px", maxWidth: 960, margin: "0 auto" }}>
+      <section style={{ padding: "56px 32px 64px", maxWidth: 960, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
           {RESOURCE_HUBS.map(r => (
             <Link key={r.title} href={r.href} style={{ textDecoration: "none" }}>

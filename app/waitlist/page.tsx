@@ -85,7 +85,7 @@ export default function WaitlistPage() {
         <div style={{ flex: "1 1 320px", paddingTop: 20 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#DCFCE7", border: "1px solid #BBF7D0", borderRadius: 100, padding: "4px 14px", marginBottom: 24 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#059669", animation: "zpulse 2s infinite" }}/>
-            <span style={{ fontSize: 11, color: "#059669", fontWeight: 600 }}>EARLY ACCESS · INDIA</span>
+            <span style={{ fontSize: 11, color: "#059669", fontWeight: 600 }}>EARLY ACCESS · INDIA + UAE</span>
           </div>
 
           <h1 style={{ fontSize: "clamp(26px,5vw,44px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, margin: "0 0 14px", color: "#0D1117" }}>
@@ -109,12 +109,12 @@ export default function WaitlistPage() {
             ))}
           </div>
 
-          {/* Testimonial */}
+          {/* Founder note (replaces fake testimonial — pre-launch honesty) */}
           <div style={{ background: "#FFFFFF", borderRadius: 12, border: "1px solid #E2E6F0", padding: "18px 20px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-            <p style={{ fontSize: 13, fontStyle: "italic", color: "#374151", lineHeight: 1.65, margin: "0 0 10px" }}>
-              "6 hours of CV reading every Monday. Zorvis does it in 20 minutes. My shortlist quality is better and I can defend every decision with a score."
+            <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.65, margin: "0 0 10px" }}>
+              We're building Zorvis with a small founding cohort right now. If you join early access, you get direct line to the team, founding-customer pricing locked in for 12 months, and your priorities shape what ships first.
             </p>
-            <div style={{ fontSize: 11, color: "#4F46E5", fontWeight: 500 }}>Priya Sharma — HR Manager, BPO, Bangalore</div>
+            <div style={{ fontSize: 11, color: "#4F46E5", fontWeight: 600 }}>— Sagar Raj, Founder · Zorvis AI</div>
           </div>
         </div>
 

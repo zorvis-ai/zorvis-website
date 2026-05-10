@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Nav, Footer, Tag } from "@/components/Nav";
+import PageHero from "@/components/PageHero";
 import { USE_CASES } from "@/components/brand";
 import Link from "next/link";
 
@@ -12,17 +13,19 @@ export default function UseCasesPage() {
     <div style={{ fontFamily: "'DM Sans',system-ui,sans-serif", background: "#FFFFFF", color: "#0D1117", minHeight: "100vh" }}>
       <Nav />
 
-      <section style={{ padding: "120px 32px 56px", textAlign: "center", maxWidth: 720, margin: "0 auto", background: "linear-gradient(180deg,#F7F8FC 0%,#FFFFFF 100%)" }}>
-        <Tag>USE CASES</Tag>
-        <h1 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 14px", color: "#0D1117" }}>
-          One platform.<br /><span style={{ color: "#4F46E5" }}>Every hiring context.</span>
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>
-          BPO to blue collar. India to UAE. Solo founder to enterprise HR. Every candidate and employee reached on their preferred channel.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="USE CASES"
+        headline={
+          <>
+            One platform.<br />
+            <span style={{ color: "#4F46E5" }}>Every hiring context.</span>
+          </>
+        }
+        summary="BPO to blue collar. India to UAE. Solo founder to enterprise HR. Every candidate and employee reached on their preferred channel."
+        suiteContext="Eight scenarios. Same data spine. Same intelligence engine."
+      />
 
-      <section style={{ padding: "0 32px 100px", maxWidth: 1100, margin: "0 auto" }}>
+      <section style={{ padding: "56px 32px 100px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
 
           {/* Tab list */}

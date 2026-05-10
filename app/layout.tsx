@@ -1,5 +1,5 @@
 import "./globals.css";
- 
+
 
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
@@ -14,6 +14,8 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://zorvis.ai"),
   title: {
+    // `default` is used when a page does not export its own metadata.title
+    // `template` wraps page-provided strings: page exports title: "Pricing" → renders as "Pricing | Zorvis AI"
     default: "Zorvis AI — People Intelligence Platform for India & UAE SMEs",
     template: "%s | Zorvis AI",
   },
@@ -40,7 +42,6 @@ export const metadata: Metadata = {
   creator: "Zorvis AI Technologies Pvt Ltd",
   publisher: "Zorvis AI Technologies Pvt Ltd",
 
-  // ── Favicons ─────────────────────────────────────────────────────────────
   icons: {
     icon: [
       { url: "/favicon.ico",       sizes: "any" },
@@ -54,7 +55,6 @@ export const metadata: Metadata = {
     },
   },
 
-  // ── Open Graph ────────────────────────────────────────────────────────────
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -74,7 +74,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  // ── Twitter ───────────────────────────────────────────────────────────────
   twitter: {
     card: "summary_large_image",
     title: "Zorvis AI — People Intelligence Platform",
@@ -101,7 +100,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured data — Organisation schema
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",

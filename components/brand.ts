@@ -1,7 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// ZORVIS AI — Brand constants · Light Enterprise Theme (Option B)
-// Inspired by: Rippling, Deel, Linear
-// Primary bg: white. Accent: indigo. Text: deep navy.
+// ZORVIS AI — Brand constants · Light Enterprise Theme
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const BRAND = {
@@ -9,50 +7,86 @@ export const BRAND = {
   tagline: "People Intelligence Platform",
   pitch:   "The AI layer behind every people decision.",
   meaning: "Zor is force in Hindi. Vis is vision in Latin. Zorvis is the intelligence engine that sees what your next great hire looks like — before you do.",
-  channel: "Every candidate and employee on their preferred channel — email, WhatsApp, SMS, or web portal.",
+  channel: "Every candidate and employee on their preferred channel — email, WhatsApp, SMS, Slack, or web portal.",
   free:    "Free tier is permanent. No trial. No credit card.",
 };
 
 export const COLORS = {
-  // Backgrounds
   bg:       "#FFFFFF",
   bgAlt:    "#F7F8FC",
   bgDark:   "#0D1117",
-
-  // Surfaces
   surface:  "#FFFFFF",
   surfaceB: "#F0F2FA",
-
-  // Borders
   border:   "#E2E6F0",
   borderB:  "#C8CEDF",
-
-  // Text
   text:     "#0D1117",
   textB:    "#374151",
   muted:    "#6B7280",
   dim:      "#9CA3AF",
-
-  // Brand accents
   indigo:   "#4F46E5",
   indigoB:  "#4338CA",
   violet:   "#7C3AED",
   lavender: "#EEF2FF",
-
-  // Status
   green:    "#059669",
   amber:    "#D97706",
   red:      "#DC2626",
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// NAV — flat list, used by mobile menu only.
+// Desktop nav uses NAV_GROUPS (with dropdowns) defined below.
+// ─────────────────────────────────────────────────────────────────────────────
 export const NAV = [
-  { label: "Product",    href: "/product" },
-  { label: "Use Cases",  href: "/use-cases" },
+  { label: "Platform",   href: "/product" },
   { label: "Solutions",  href: "/solutions" },
-  { label: "Pricing",    href: "/pricing" },
   { label: "Resources",  href: "/resources" },
-  { label: "Customers",  href: "/customers" },
-  { label: "About",      href: "/about" },
+  { label: "Pricing",    href: "/pricing" },
+];
+
+// Desktop dropdown structure
+export const NAV_GROUPS = [
+  {
+    label: "Platform",
+    href: "/product",
+    children: [
+      { label: "Overview",      href: "/product",        desc: "The full hire-to-retain platform" },
+      { label: "How it works",  href: "/how-it-works",   desc: "End-to-end flow in 7 stages" },
+      { label: "Use cases",     href: "/use-cases",      desc: "BPO, blue-collar, agencies, founders" },
+      { label: "AI Interview",  href: "/waitlist?interest=ai-interview", desc: "Phone interviews in 8 languages" },
+    ],
+  },
+  {
+    label: "Solutions",
+    href: "/solutions",
+    children: [
+      { label: "India SME",          href: "/solutions?market=india",  desc: "50–500 employees" },
+      { label: "UAE & GCC",          href: "/solutions?market=uae",    desc: "Pre-arrival to WPS" },
+      { label: "Staffing Agencies",  href: "/solutions?market=agency", desc: "White-label platform" },
+      { label: "—" },
+      { label: "BPO & Contact Centres", href: "/solutions/volume-hiring?industry=bpo" },
+      { label: "Manufacturing",         href: "/solutions/volume-hiring?industry=manufacturing" },
+      { label: "Retail & QSR",          href: "/solutions/volume-hiring?industry=retail" },
+      { label: "Logistics & E-commerce", href: "/solutions/volume-hiring?industry=logistics" },
+      { label: "Hospitality & F&B",     href: "/solutions/volume-hiring?industry=hospitality" },
+    ],
+  },
+  {
+    label: "Resources",
+    href: "/resources",
+    children: [
+      { label: "Blog",            href: "/resources/blog",      desc: "HR insights, no fluff" },
+      { label: "HR Templates",    href: "/resources/templates", desc: "Free downloads" },
+      { label: "Guides",          href: "/resources/guides",    desc: "Deep-dive playbooks" },
+      { label: "FAQ",             href: "/faq",                 desc: "Pricing, product, compliance" },
+      { label: "ROI Calculator",  href: "/roi-calculator",      desc: "Estimate your savings" },
+      { label: "Customers",       href: "/customers",           desc: "Founding cohort" },
+    ],
+  },
+  {
+    label: "Pricing",
+    href: "/pricing",
+    children: null, // No dropdown — direct link
+  },
 ];
 
 export const CHANNELS = [
@@ -63,6 +97,10 @@ export const CHANNELS = [
   { icon: "🌐", label: "Web portal", note: "Always available" },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// MODULES — kept for backward compatibility with /product page.
+// The 6-module suite lives in ZorvisModulesStrip.tsx and is the source of truth.
+// ─────────────────────────────────────────────────────────────────────────────
 export const MODULES = [
   {
     num: "01", name: "Hire", slug: "hire",
@@ -158,7 +196,7 @@ export const USE_CASES = [
   {
     id: "hr-ops", icon: "📱", title: "HR Daily Operations", sub: "Module 02",
     problem: "HR spends 40% of time answering questions they've answered a hundred times. Leave balance. Payslip. Holiday list.",
-    solution: "Employees self-serve on WhatsApp, Slack, email, or portal. Helpdesk answers routine questions 24/7. HR handles exceptions only.",
+    solution: "Employees self-serve on the channel they prefer — WhatsApp, Slack, email, or portal. Helpdesk answers routine questions 24/7. HR handles exceptions only.",
     metrics: ["24/7 self-service", "Employee's choice of channel", "HR handles exceptions only"],
     steps: ["Employee queries on preferred channel", "Leave balance answered instantly", "Payslip link sent on request", "Goals checked via any channel", "HR handles exceptions only"],
     color: "#7C3AED",
@@ -173,7 +211,7 @@ export const USE_CASES = [
   },
   {
     id: "gcc-compliance", icon: "⚖️", title: "GCC Compliance", sub: "UAE · KSA · GCC",
-    problem: "Visa expiry tracked on paper. WPS fines for late filing. Emirates ID collected via WhatsApp photos stored nowhere structured.",
+    problem: "Visa expiry tracked on paper. WPS fines for late filing. Emirates ID collected via channel photos stored nowhere structured.",
     solution: "Compliance calendar with automated alerts. WPS SIF auto-generated. Emirates ID OCR. Bilingual offers. MOHRE-ready docs.",
     metrics: ["Visa expiry alerts", "WPS SIF in one click", "MOHRE-ready docs"],
     steps: ["Compliance calendar auto-populated", "Visa alert 30 days before expiry", "WPS SIF on payroll run", "Emirates ID auto-extracted", "Labour contract renewals tracked"],
@@ -202,20 +240,39 @@ export const TEAM = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PRICING — 4-tier structure (Free / Starter / Growth / Scale)
+// ─────────────────────────────────────────────────────────────────────────────
 export const PRICING = {
   india: [
     {
-      name: "Starter", price: "Free", sub: "forever", highlight: false, color: "#6B7280",
-      desc: "For founders making their first hires.",
+      name: "Free", price: "₹0", sub: "forever", highlight: false, color: "#6B7280",
+      desc: "For founders evaluating the AI ranking engine.",
       features: [
-        "3 active jobs",
-        "50 CVs ranked per job",
-        "Score bands shown, contacts blurred",
-        "10 assessments/month (any channel)",
-        "Basic Kanban pipeline",
+        "1 active job",
+        "Unlimited CVs uploaded",
+        "AI ranking with score bands",
+        "Contact details blurred",
+        "5 assessments/month",
+        "0 AI phone interviews",
         "Email support",
       ],
       cta: "Start free", href: "/waitlist",
+    },
+    {
+      name: "Starter", price: "₹4,999", sub: "/month", highlight: false, color: "#4F46E5",
+      desc: "For founders making their first hires.",
+      features: [
+        "5 active jobs",
+        "Unlimited CV ranking",
+        "Full contact unlock",
+        "50 assessments/month (any channel)",
+        "50 AI phone interviews/month (Beta)",
+        "Basic Kanban pipeline",
+        "Digital offers + e-signature",
+        "Email support",
+      ],
+      cta: "Get early access", href: "/waitlist",
     },
     {
       name: "Growth", price: "₹9,999", sub: "/month", highlight: true, color: "#4F46E5",
@@ -229,7 +286,7 @@ export const PRICING = {
         "Full Kanban + automated actions",
         "Digital offers + e-signature",
         "UAE compliance module",
-        "25 employee HR OS",
+        "25-employee HR OS",
         "Priority support",
       ],
       cta: "Get early access", href: "/waitlist",
@@ -241,7 +298,7 @@ export const PRICING = {
         "Everything in Growth",
         "Unlimited assessments",
         "1,000 AI phone interviews/month (Beta)",
-        "100 employee HR OS",
+        "100-employee HR OS",
         "Agency white-label dashboard",
         "API access",
         "Dedicated onboarding + SLA",
@@ -251,17 +308,33 @@ export const PRICING = {
   ],
   uae: [
     {
-      name: "Starter", price: "Free", sub: "forever", highlight: false, color: "#6B7280",
-      desc: "For small businesses hiring locally.",
+      name: "Free", price: "AED 0", sub: "forever", highlight: false, color: "#6B7280",
+      desc: "For small businesses evaluating the platform.",
       features: [
-        "3 active jobs",
-        "50 CVs ranked per job",
-        "Score bands shown, contacts blurred",
-        "10 assessments/month (any channel)",
-        "Basic Kanban pipeline",
+        "1 active job",
+        "Unlimited CVs uploaded",
+        "AI ranking with score bands",
+        "Contact details blurred",
+        "5 assessments/month",
+        "0 AI phone interviews",
         "Email support",
       ],
       cta: "Start free", href: "/waitlist",
+    },
+    {
+      name: "Starter", price: "AED 249", sub: "/month", highlight: false, color: "#4F46E5",
+      desc: "For small businesses hiring locally.",
+      features: [
+        "5 active jobs",
+        "Unlimited CV ranking",
+        "Full contact unlock",
+        "50 assessments/month (any channel)",
+        "50 AI phone interviews/month (Beta)",
+        "Basic Kanban pipeline",
+        "Digital offers + e-signature",
+        "Email support",
+      ],
+      cta: "Get early access", href: "/waitlist",
     },
     {
       name: "Growth", price: "AED 549", sub: "/month", highlight: true, color: "#4F46E5",
@@ -275,7 +348,7 @@ export const PRICING = {
         "Emirates ID OCR",
         "Bilingual Arabic/English offers",
         "WPS SIF auto-generation",
-        "25 employee HR OS",
+        "25-employee HR OS",
       ],
       cta: "Get early access", href: "/waitlist",
     },
@@ -286,7 +359,7 @@ export const PRICING = {
         "Everything in Growth",
         "Unlimited assessments",
         "1,000 AI phone interviews/month (Beta)",
-        "100 employee HR OS",
+        "100-employee HR OS",
         "Visa expiry calendar + alerts",
         "MOHRE-ready documentation",
         "API access",

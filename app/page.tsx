@@ -24,13 +24,16 @@ import AptitudeSampleWidget from "./components/AptitudeSampleWidget";
 import DataCompoundsAnimation from "./components/DataCompoundsAnimation";
 import ZorvisModulesStrip from "@/components/ZorvisModulesStrip";
 
+// NOTE: industries linked to /solutions/volume-hiring with query params, not anchors.
+// The /solutions/volume-hiring page should read useSearchParams to set its initial active tab.
+// (5E task — currently treats them as section anchors which won't work with tabs.)
 const INDUSTRIES = [
-  { icon: Headphones, label: "BPO & Contact Centres", anchor: "bpo" },
-  { icon: ShoppingBag, label: "Retail & QSR", anchor: "retail" },
-  { icon: Truck, label: "Logistics & E-commerce", anchor: "logistics" },
-  { icon: Briefcase, label: "Staffing Agencies", anchor: "staffing" },
-  { icon: Factory, label: "Manufacturing", anchor: "manufacturing" },
-  { icon: Building2, label: "Hospitality & Services", anchor: "hospitality" },
+  { icon: Headphones, label: "BPO & Contact Centres", q: "bpo" },
+  { icon: ShoppingBag, label: "Retail & QSR", q: "retail" },
+  { icon: Truck, label: "Logistics & E-commerce", q: "logistics" },
+  { icon: Briefcase, label: "Staffing Agencies", q: "staffing" },
+  { icon: Factory, label: "Manufacturing", q: "manufacturing" },
+  { icon: Building2, label: "Hospitality & Services", q: "hospitality" },
 ];
 
 export default function HomePage() {
@@ -39,10 +42,10 @@ export default function HomePage() {
       <Nav />
 
       {/* ────────────── HERO ────────────── */}
+      {/* overflow-hidden contains the HeroAnimation, prevents right-side clipping bleed */}
       <section
         className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950"
         style={{
-          // Mobile safe-area fix — accounts for iOS notch / Dynamic Island
           paddingTop:
             "calc(env(safe-area-inset-top, 0px) + 1rem)",
         }}
@@ -90,8 +93,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — animation */}
-            <div className="relative">
+            {/* Right — animation. max-w-full prevents children overflowing the column. */}
+            <div className="relative max-w-full overflow-hidden">
               <HeroAnimation />
             </div>
           </div>
@@ -99,7 +102,8 @@ export default function HomePage() {
       </section>
 
       {/* ────────────── MODULES STRIP — sets the suite frame early ────────────── */}
-      <ZorvisModulesStrip />
+      {/* followsDarkHero=true smooths the dark→light transition with a subtle gradient */}
+      <ZorvisModulesStrip followsDarkHero />
 
       {/* ────────────── INDUSTRIES STRIP ────────────── */}
       <section className="border-y border-slate-200 bg-white">
@@ -111,7 +115,7 @@ export default function HomePage() {
             {INDUSTRIES.map((ind) => (
               <Link
                 key={ind.label}
-                href={`/solutions/volume-hiring#${ind.anchor}`}
+                href={`/solutions/volume-hiring?industry=${ind.q}`}
                 className="group flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-5 transition hover:border-indigo-300 hover:bg-indigo-50/30"
               >
                 <ind.icon className="h-6 w-6 text-slate-500 transition group-hover:text-indigo-600" />
@@ -161,7 +165,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ────────────── AI INTERVIEW SECTION (NEW) ────────────── */}
+      {/* ────────────── AI INTERVIEW SECTION ────────────── */}
       <section className="bg-slate-50 border-y border-slate-200">
         <div className="mx-auto max-w-5xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
@@ -208,10 +212,11 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              {/* CTA — whitespace-nowrap on the button prevents text wrap; flex-col stack at narrow widths */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <Link
                   href="/waitlist?interest=ai-interview"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-700"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-700"
                 >
                   Apply for AI Interview beta
                   <ArrowRight className="h-4 w-4" />
@@ -225,7 +230,6 @@ export default function HomePage() {
             {/* Right — visual mock */}
             <div className="relative">
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg">
-                {/* Phone call header */}
                 <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Phone className="h-5 w-5" />
@@ -247,7 +251,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Transcript */}
                 <div className="mt-4 space-y-3 text-sm">
                   <div>
                     <div className="text-xs font-semibold text-violet-700">
@@ -270,7 +273,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Scoring panel */}
                 <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
                   <div className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     Live Scoring
@@ -292,7 +294,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Floating ribbon */}
               <div className="absolute -top-3 -right-3 hidden rotate-3 transform rounded-md bg-violet-600 px-3 py-1.5 text-xs font-bold text-white shadow-md md:block">
                 Top match · Move to interview
               </div>
@@ -328,7 +329,7 @@ export default function HomePage() {
               {
                 icon: Users,
                 title: "Meet candidates where they are",
-                desc: "Tests delivered on the candidate's preferred channel — WhatsApp, email, SMS, or web. 95% open rate. No app downloads.",
+                desc: "Tests delivered on the candidate's preferred channel — email, WhatsApp, SMS, or web. 95% open rate. No app downloads.",
                 accent: "bg-emerald-100 text-emerald-700",
               },
               {
@@ -375,7 +376,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ────────────── WHAT GETS BETTER AS YOU GROW (NEW) ────────────── */}
+      {/* ────────────── WHAT GETS BETTER AS YOU GROW ────────────── */}
       <section className="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 text-white">
         <div className="mx-auto max-w-5xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="text-center">
@@ -393,22 +394,10 @@ export default function HomePage() {
 
           <div className="mt-12 space-y-3">
             {[
-              {
-                marker: "100",
-                line: "After 100 hires, your dashboard knows what good looks like at your company.",
-              },
-              {
-                marker: "200",
-                line: "After 200, your reviews start factoring in hire-day baseline scores.",
-              },
-              {
-                marker: "500",
-                line: "After 500, your succession planning surfaces names you wouldn't have noticed.",
-              },
-              {
-                marker: "1000",
-                line: "After 1,000, you've built something Workday couldn't replicate even with their billion-dollar engineering team.",
-              },
+              { marker: "100",  line: "After 100 hires, your dashboard knows what good looks like at your company." },
+              { marker: "200",  line: "After 200, your reviews start factoring in hire-day baseline scores." },
+              { marker: "500",  line: "After 500, your succession planning surfaces names you wouldn't have noticed." },
+              { marker: "1000", line: "After 1,000, you've built something Workday couldn't replicate even with their billion-dollar engineering team." },
             ].map((row, i) => (
               <div
                 key={i}

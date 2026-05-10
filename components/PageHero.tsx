@@ -163,7 +163,7 @@ export default function PageHero({
       </section>
 
       {/* Modules strip — under the hero on every sub-page by default */}
-      {!hideModulesStrip && <ZorvisModulesStrip variant="compact" />}
+      {!hideModulesStrip && <ZorvisModulesStrip variant="compact" followsDarkHero={isDark} />}
     </>
   );
 }
