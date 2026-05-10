@@ -9,6 +9,7 @@ import {
   FileText,
   Brain,
   MessageSquare,
+  Phone,
   Calendar,
   FileSignature,
   UserCheck,
@@ -20,7 +21,7 @@ import {
 } from "lucide-react";
 
 // ─────────────────────────────────────────
-// THE 6 STAGES
+// THE 7 STAGES
 // ─────────────────────────────────────────
 
 type Stage = {
@@ -105,8 +106,31 @@ const STAGES: Stage[] = [
     techNote: "Tests served from Cloudflare edge network. Auto-scored within 60s of submission. WATI integration for WhatsApp delivery; Meta Cloud API at scale.",
   },
   {
-    id: "interview",
+    id: "ai-interview",
     num: "04",
+    icon: Phone,
+    title: "AI conducts the first-round phone interview",
+    duration: "5 minutes per call",
+    hook: "Top scorers from the aptitude test get a phone call from our AI. 4-5 standardized questions, recorded with consent, in their preferred language. HR sees only the top 10-15% who pass.",
+    bullets: [
+      {
+        label: "Eight languages, native speakers",
+        detail: "English, Hindi, Tamil, Telugu, Marathi, Bengali, Kannada, Arabic. Hinglish code-switching supported. AI matches the candidate's language preference from their application.",
+      },
+      {
+        label: "Standardized 4-5 question flow",
+        detail: "Role-specific question banks tuned for BPO (voice quality, shift availability, scenarios) and blue-collar (reliability, literacy, situational judgment). Same questions, same scoring, every candidate.",
+      },
+      {
+        label: "DPDP-compliant recording (P3, P11)",
+        detail: "3-second consent disclosure before call connects. 30-day retention then auto-deletion. Candidate can request transcript and dispute scoring. AI never makes the final hire decision — only ranks.",
+      },
+    ],
+    techNote: "Beta launching October 2026. Built on managed voice agent stack with Whisper transcription and Groq LLM for live scoring. Included in every paid plan: 50/200/1,000 calls per month on Starter/Growth/Scale.",
+  },
+  {
+    id: "interview",
+    num: "05",
     icon: Calendar,
     title: "Interview the right people",
     duration: "Auto-scheduled in seconds",
@@ -129,7 +153,7 @@ const STAGES: Stage[] = [
   },
   {
     id: "offer",
-    num: "05",
+    num: "06",
     icon: FileSignature,
     title: "Send offers, get them signed",
     duration: "Same-day acceptance",
@@ -152,7 +176,7 @@ const STAGES: Stage[] = [
   },
   {
     id: "onboard",
-    num: "06",
+    num: "07",
     icon: UserCheck,
     title: "Onboard from candidate to employee",
     duration: "Day 1 to active in hours",
@@ -239,7 +263,7 @@ export default function HowItWorksPage() {
               fontSize: "clamp(24px, 3.5vw, 34px)", fontWeight: 800,
               letterSpacing: "-0.025em", margin: "0 0 14px", color: "#0D1117",
             }}>
-              The 6-stage journey, end to end.
+              The 7-stage journey, end to end.
             </h2>
             <p style={{
               fontSize: 15, color: "#6B7280", maxWidth: 540, margin: "0 auto",
@@ -606,6 +630,8 @@ function StageVisual({ stage }: { stage: Stage }) {
       return <VisualRank />;
     case "test":
       return <VisualTest />;
+    case "ai-interview":
+      return <VisualAIInterview />;
     case "interview":
       return <VisualInterview />;
     case "offer":
@@ -615,6 +641,124 @@ function StageVisual({ stage }: { stage: Stage }) {
     default:
       return null;
   }
+}
+
+// ─── Stage 04 — AI Interview (phone with live transcript bubbles)
+function VisualAIInterview() {
+  const exchanges = [
+    { isAi: true,  text: "क्या आप रात की शिफ्ट में काम कर सकते हैं?", y: 60 },
+    { isAi: false, text: "हां, मैं पिछले 2 साल से रात की शिफ्ट कर रहा हूं", y: 130 },
+    { isAi: true,  text: "What's your typing speed in English?", y: 200 },
+    { isAi: false, text: "Around 45 words per minute", y: 250 },
+  ];
+  return (
+    <svg viewBox="0 0 400 320" style={{ width: "100%", maxWidth: 480, display: "block", margin: "0 auto" }}>
+      {/* Phone frame */}
+      <motion.g
+        initial={{ scale: 0.92, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
+        <rect x="36" y="22" width="180" height="280" rx="22" fill="#0D1117" stroke="#7C3AED" strokeWidth="1.5" />
+        <rect x="48" y="34" width="156" height="256" rx="14" fill="#1A1F2E" />
+        <circle cx="126" cy="48" r="3" fill="#7C3AED" />
+      </motion.g>
+
+      {/* Live indicator */}
+      <motion.g
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
+        <circle cx="64" cy="68" r="3.5" fill="#10B981">
+          <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" />
+        </circle>
+        <text x="74" y="71" fill="#10B981" fontSize="9" fontFamily="'DM Sans'" fontWeight="700" letterSpacing="1">LIVE · 04:23</text>
+        <text x="180" y="71" textAnchor="end" fill="#9CA3AF" fontSize="8" fontFamily="'DM Sans'">HI</text>
+      </motion.g>
+
+      {/* Transcript bubbles inside phone */}
+      {exchanges.map((ex, i) => (
+        <motion.g
+          key={i}
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.35, delay: 0.5 + i * 0.25 }}
+        >
+          <rect
+            x={ex.isAi ? 56 : 84}
+            y={ex.y}
+            width={ex.isAi ? 108 : 112}
+            height={ex.text.length > 30 ? 36 : 22}
+            rx="6"
+            fill={ex.isAi ? "rgba(167,139,250,0.18)" : "#FFFFFF"}
+            stroke={ex.isAi ? "rgba(167,139,250,0.4)" : "transparent"}
+            strokeWidth="0.8"
+          />
+          <text
+            x={ex.isAi ? 62 : 90}
+            y={ex.y + 14}
+            fill={ex.isAi ? "#C4B5FD" : "#0D1117"}
+            fontSize="6.5"
+            fontFamily="'DM Sans'"
+            fontWeight="500"
+          >
+            {ex.text.length > 30 ? ex.text.slice(0, 28) + "…" : ex.text}
+          </text>
+          {ex.text.length > 30 && (
+            <text
+              x={ex.isAi ? 62 : 90}
+              y={ex.y + 26}
+              fill={ex.isAi ? "#C4B5FD" : "#0D1117"}
+              fontSize="6.5"
+              fontFamily="'DM Sans'"
+              fontWeight="500"
+            >
+              {ex.text.slice(28, 56)}
+            </text>
+          )}
+        </motion.g>
+      ))}
+
+      {/* Right side — Live scoring panel */}
+      <motion.g
+        initial={{ x: 20, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 1.2 }}
+      >
+        <rect x="240" y="60" width="130" height="200" rx="10" fill="#FFFFFF" stroke="#E2E6F0" strokeWidth="1" />
+        <text x="305" y="80" textAnchor="middle" fill="#6B7280" fontSize="8" fontFamily="'DM Sans'" fontWeight="700" letterSpacing="1">LIVE SCORING</text>
+
+        {/* Score bars */}
+        {[
+          { label: "Communication", value: 8.4, color: "#10B981" },
+          { label: "Availability",  value: 9.1, color: "#10B981" },
+          { label: "Experience",    value: 6.8, color: "#F59E0B" },
+        ].map((s, i) => (
+          <g key={s.label}>
+            <text x="252" y={108 + i * 42} fill="#374151" fontSize="9" fontFamily="'DM Sans'" fontWeight="600">{s.label}</text>
+            <text x="358" y={108 + i * 42} textAnchor="end" fill={s.color} fontSize="11" fontFamily="'DM Sans'" fontWeight="800">{s.value}</text>
+            <rect x="252" y={114 + i * 42} width="106" height="4" rx="2" fill="#F1F5F9" />
+            <motion.rect
+              x="252" y={114 + i * 42} width={106 * (s.value / 10)} height="4" rx="2" fill={s.color}
+              initial={{ width: 0 }}
+              whileInView={{ width: 106 * (s.value / 10) }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 1.4 + i * 0.15 }}
+            />
+          </g>
+        ))}
+
+        {/* Recommendation pill */}
+        <rect x="252" y="222" width="106" height="22" rx="11" fill="#7C3AED" />
+        <text x="305" y="237" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontFamily="'DM Sans'" fontWeight="700">Move to interview</text>
+      </motion.g>
+    </svg>
+  );
 }
 
 // ─── Stage 01 — Post (one icon → many platforms)
