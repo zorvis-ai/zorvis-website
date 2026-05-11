@@ -93,18 +93,46 @@ export default function AdminDashboard() {
 
   const downloadResume = async (app: Application) => {
     if (!app.resume_url || !app.resume_filename) return;
+
     try {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const filename = app.resume_url.split("/resumes/")[1];
-      const res = await fetch(`${supabaseUrl}/storage/v1/object/resumes/${filename}`, {
-        headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, Authorization: `Bearer ${token}` },
-      });
+      const path = app.resume_url.split("/resumes/")[1];
+      if (!path) {
+        console.error("Bad resume_url format:", app.resume_url);
+        alert("Resume path is malformed in the database.");
+        return;
+      }
+
+      const res = await fetch(
+        `${supabaseUrl}/storage/v1/object/resumes/${path}`,
+        {
+          headers: {
+            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Download failed:", res.status, errorText);
+        alert(`Could not download resume (${res.status}): ${errorText}`);
+        return;
+      }
+
       const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
+      a.href = url;
       a.download = app.resume_filename;
+      document.body.appendChild(a);
       a.click();
-    } catch {}
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Resume download error:", err);
+      alert("Something went wrong downloading the resume.");
+    }
   };
 
   const downloadSelected = async () => {
